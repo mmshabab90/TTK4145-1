@@ -19,5 +19,6 @@
 *** Implement driver in python
 ** TODO Process-pairs
 *** Communication between processes
+UDP broadcast on localhost
 *** Auto-create new process on start up
-***
+** *
