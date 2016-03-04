@@ -6,9 +6,10 @@ example.py. The library is simply compiled using gcc and then imported
 into the python file.
 
 The following line shows how to compile the driver library.
-#+begin_src c
+
+``` cmake
 gcc --std=c11 -shared -fPIC io.c elev.c -o driver.so /usr/lib/libcomedi.so
-   #+end_src
+```
 
 ## Plan
 ### Network module
