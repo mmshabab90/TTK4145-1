@@ -1,0 +1,38 @@
+*Diagrams
+This file contains the source for the diagrams used in the documentation.
+#+begin_src plantuml :file master-client.png
+Node Master
+Node Backup
+Node Client1
+Node Client2
+Node Client3
+
+Master -right.. Backup
+Master -- Client1
+Master -- Client2
+Master -- Client3
+
+#+end_src
+
+#+RESULTS:
+[[file:master-client.png]]
+
+#+begin_src plantuml :file backup-client.png
+Node OldMaster
+Node NewMaster
+Node NewBackup
+Node Client1
+Node Client2
+Node Client3
+
+OldMaster -right--+ NewMaster
+NewMaster -right.. NewBackup
+NewMaster -- Client1
+NewMaster -- Client2
+NewMaster -- Client3
+
+
+#+end_src
+
+#+RESULTS:
+[[file:backup-client.png]]
