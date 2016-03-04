@@ -17,13 +17,13 @@ The network module is implemented using a master-client configuration.
 The master employs a process-pair technique to keep a backup of itself.
 The following figure shows the normal situation.
 
-(master-client)[/diagrams/master-client.png]
+!(master-client)[/diagrams/master-client.png]
 
 If the master were to lose connection with the network the backup takes
 over, reestablishes the connection to all the clients and creates a new
 backup of itself, as shown in the figure below.
 
-(backup-client)[/diagrams/backup-client.png]
+!(backup-client)[/diagrams/backup-client.png]
 
 For communication between master and client we employ TCP, and we use
 JSON for serialization.
