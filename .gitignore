@@ -69,3 +69,12 @@ target/
 .python-version
 
 auto/
+
+#Ada stuff
+# Object file
+*.o
+
+# Ada Library Information
+*.ali
+
+
