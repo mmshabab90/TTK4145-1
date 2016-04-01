@@ -11,7 +11,23 @@ The following line shows how to compile the driver library.
 gcc --std=c11 -shared -fPIC io.c elev.c -o driver.so /usr/lib/libcomedi.so
 ```
 
+Abstractions
+- Go_to_floor(floor)
+  --* Close door
+  --* Set direction
+  --* Update floor lights as it moves
+  --* Stop at destination
+  --* Turn off light
+  --* Open door
+
+- check_buttons()
+  --* Check cab buttons
+  --* Check floor up/down buttons
+  --* Turn on lights
+  --* Notify queue
+
 ## Plan
+
 ### Network module
 The network module is implemented using a master-client configuration.
 The master employs a process-pair technique to keep a backup of itself.
