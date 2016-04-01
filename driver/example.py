@@ -16,7 +16,7 @@ BUTTON_COMMAND = 2
 
 elev = cdll.LoadLibrary("./driver.so")
 
-elev.elev_init()
+elev.elev_init(1)
 
 print "Press STOP button to stop elevator and exit program.\n"
 
