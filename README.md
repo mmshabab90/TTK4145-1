@@ -33,3 +33,7 @@ For communication between master and client we employ TCP, and we use
 JSON for serialization.
 
 ### Queue module
+The queue module is run on the master, and is at all times aware of the
+positions, states and requests of all the elevators. When a new request is
+made at a client, the client notifies the queue/master and the queue designates
+the most suited elevator to fulfill the request.
