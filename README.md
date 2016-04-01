@@ -10,21 +10,9 @@ The following line shows how to compile the driver library.
 ``` cmake
 gcc --std=c11 -shared -fPIC io.c elev.c -o driver.so /usr/lib/libcomedi.so
 ```
-
-Abstractions
-- Go_to_floor(floor)
-  --* Close door
-  --* Set direction
-  --* Update floor lights as it moves
-  --* Stop at destination
-  --* Turn off light
-  --* Open door
-
-- check_buttons()
-  --* Check cab buttons
-  --* Check floor up/down buttons
-  --* Turn on lights
-  --* Notify queue
+The file elev.py makes two functions available, ```go_to_floor``` and
+```check_buttons()```. These functions abstracts from the elevator driver,
+and provide an easy to use interface for elevator control.
 
 ## Plan
 
@@ -43,3 +31,5 @@ backup of itself, as shown in the figure below.
 
 For communication between master and client we employ TCP, and we use
 JSON for serialization.
+
+### Queue module
