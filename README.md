@@ -37,3 +37,6 @@ The queue module is run on the master, and is at all times aware of the
 positions, states and requests of all the elevators. When a new request is
 made at a client, the client notifies the queue/master and the queue designates
 the most suited elevator to fulfill the request.
+
+### Cost function
+The cost function calculates the minimum travel time.
