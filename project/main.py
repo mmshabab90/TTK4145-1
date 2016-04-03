@@ -1,22 +1,13 @@
-from ctypes import *
+import elev
+import queue
+from constants import *
 
-#Number of floors. Hardware-dependent, do not modify.
-N_FLOORS = 4
+def main():
+    queue.init(N_ELEV)
+    while (True):
+        request = elev.check_buttons()
+        if (request != (-1,-1)):
+            queue.assign_task(request[0], request[1])
 
-# Number of buttons (and corresponding lamps) on a per-floor basis
-N_BUTTONS = 3
-
-DIRN_DOWN = -1
-DIRN_STOP = 0
-DIRN_UP = 1
-
-BUTTON_CALL_UP = 0
-BUTTON_CALL_DOWN = 1
-BUTTON_COMMAND = 2
-
-elev = cdll.LoadLibrary("./driver.so")
-
-elev.elev_init()
-
-while (True):
-    pass
+if __name__ == "__main__":
+    main()

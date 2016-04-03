@@ -1,18 +1,5 @@
 from ctypes import *
-
-#Number of floors. Hardware-dependent, do not modify.
-N_FLOORS = 4
-
-# Number of buttons (and corresponding lamps) on a per-floor basis
-N_BUTTONS = 3
-
-DIRN_DOWN = -1
-DIRN_STOP = 0
-DIRN_UP = 1
-
-BUTTON_CALL_UP = 0
-BUTTON_CALL_DOWN = 1
-BUTTON_COMMAND = 2
+from constants import *
 
 elev = cdll.LoadLibrary("../driver/driver.so")
 
@@ -34,8 +21,8 @@ def go_to_floor(desired_floor, init_floor):
     elev.elev_set_door_open_lamp(1)
 
 def check_buttons():
-    for type in range(N_BUTTONS):
+    for button_type in range(N_BUTTONS):
         for floor in range(N_FLOORS):
-            if (elev.elev_get_button_signal(type, floor)):
-                return (type, floor)
-    return -1
+            if (elev.elev_get_button_signal(button_type, floor)):
+                return (button_type, floor)
+    return (-1,-1)
