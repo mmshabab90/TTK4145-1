@@ -1,4 +1,4 @@
-N_ELEV = 3
+N_ELEV = 1
 
 #Number of floors. Hardware-dependent, do not modify.
 N_FLOORS = 4
