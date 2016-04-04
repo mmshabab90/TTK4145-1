@@ -16,3 +16,8 @@ BUTTON_COMMAND = 2
 
 IDLE = 0
 RUNNING = 1
+
+
+#Time weighting
+TIME_BETWEEN_FLOORS = 5
+STOP_TIME = 10
