@@ -8,7 +8,7 @@ into the python file.
 The following line shows how to compile the driver library.
 
 ``` cmake
-gcc --std=c11 -shared -fPIC io.c elev.c -o driver.so /usr/lib/libcomedi.so
+gcc --std=gnu11 -shared -fPIC io.c elev.c -o driver.so /usr/lib/libcomedi.so
 ```
 The file elev.py makes two functions available, ```go_to_floor``` and
 ```check_buttons()```. These functions abstracts from the elevator driver,
