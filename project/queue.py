@@ -20,14 +20,6 @@ def assign_task(floor):
             elev = fastest_elev(floor)
             task_stacks[elev].append(floor)
         print_task_stack()
-        
-
-    # idle_elev = closest_idle_elev(floor)
-    # if (idle_elev != -1 and not any(floor in stack for stack in task_stacks)):
-    #     task_stacks[idle_elev].append(floor)
-    # else:
-    #     pass
-    # print_task_stack()
 
 def closest_elev(floor):
     min_dist = N_FLOORS
@@ -41,14 +33,14 @@ def closest_elev(floor):
     return closest_elev
 
 def print_task_stack():
-    system('clear')
+    #system('clear')
     for stack in task_stacks:
         print "-------------------"
         for task in stack:
-            print task, " "
-    print "-------------------"
+            print task, " ",
+    print "\n-------------------"
 
-def cal_time(stack, floor): 
+def cal_time(stack, floor):
     elev = task_stacks.index(stack)
     stops = len(task_stacks[elev])
     distance = N_FLOORS*2
@@ -58,7 +50,7 @@ def cal_time(stack, floor):
     elif(elev_dir(elev) == DIRN_UP and floor <= elev_cur_floor[elev]):
         distance = 2*max(task_stacks[elev]) - elev_cur_floor[elev] - floor
     elif(elev_dir(elev) == DIRN_DOWN and floor >= elev_cur_floor[elev]):
-        distance = elev_cur_floor + floor
+        distance = elev_cur_floor[elev] + floor
     else:
         distance = abs(elev_cur_floor[elev] - floor)
 
