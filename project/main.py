@@ -19,7 +19,7 @@ def main():
     queue.init(N_ELEV)
     lock = Lock()
     button_thread = Thread(target = check_and_assign, args = (lock,))
-    task_thread = Thread(target = elev.go_to_floor2, args = (lock,))
+    task_thread = Thread(target = elev.go_to_floor, args = (lock,))
     button_thread.setDaemon(True)
     button_thread.start()
 

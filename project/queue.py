@@ -11,15 +11,31 @@ def init(n_elev):
         elev_cur_floor.append(0)
 
 def assign_task(floor):
-
+    elev = None
     if(not any(floor in stack for stack in task_stacks)):
         if(all(tasks == [] for tasks in task_stacks)):
             elev = closest_elev(floor)
-            task_stacks[elev].append(floor)
         else:
             elev = fastest_elev(floor)
-            task_stacks[elev].append(floor)
-        print_task_stack()
+        insert_task(elev, floor)
+
+def insert_task(elev, floor):
+    cur_floor = elev_cur_floor[elev]
+    cur_dir = elev_dir(elev)
+    if((cur_floor < floor and cur_dir == DIRN_UP) or
+       (cur_floor <= floor and cur_dir == DIRN_DOWN)):
+        for task in task_stacks[elev]:
+            if (floor < task):
+                task_stacks[elev].insert(task_stacks[elev].index(task), floor)
+                return
+    else:
+        for task in task_stacks[elev]:
+            if (floor > task):
+                task_stacks[elev].insert(task_stacks[elev].index(task), floor)
+                return
+    task_stacks[elev].append(floor)
+
+
 
 def closest_elev(floor):
     min_dist = N_FLOORS
