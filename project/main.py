@@ -14,14 +14,13 @@ def check_and_assign(lock):
             lock.acquire(True)
             queue.assign_task(request[1])
             lock.release()
+            queue.print_task_stack()
         if (request == (-1,-1) and button_pressed):
             button_pressed = False
 
 def main():
     HOST, PORT = 'localhost', 9998
     server = network.ThreadedTCPServer((HOST,PORT), network.ClientHandler)
-    server.serve_forever()
-
     queue.init(N_ELEV)
     lock = Lock()
     button_thread = Thread(target = check_and_assign, args = (lock,))
@@ -32,10 +31,7 @@ def main():
     task_thread.setDaemon(True)
     task_thread.start()
 
-    button_thread.join()
-    task_thread.join()
-
-
+    server.serve_forever()
 
 if __name__ == "__main__":
     main()

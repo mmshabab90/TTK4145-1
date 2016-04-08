@@ -15,10 +15,8 @@ def check_buttons():
     return (-1,-1)
 
 def go_to_floor(lock):
-    #print "Go_to_floor called"
     while (True):
         if (queue.task_stacks[0] != []):
-     #       print "Stack is not empty"
             while (queue.elev_cur_floor[0] != queue.task_stacks[0][0]):
                 if (queue.task_stacks[0][0] > queue.elev_cur_floor[0]):
                     elev.elev_set_motor_direction(DIRN_UP)
@@ -26,8 +24,6 @@ def go_to_floor(lock):
                     elev.elev_set_motor_direction(DIRN_DOWN)
                 floor_sensor = elev.elev_get_floor_sensor_signal()
                 if (floor_sensor != -1 and floor_sensor != queue.elev_cur_floor[0]):
-                    print "Floor:", floor_sensor
-                    #queue.print_task_stack()
                     queue.elev_cur_floor[0] = floor_sensor
                     elev.elev_set_floor_indicator(floor_sensor)
             elev.elev_set_motor_direction(DIRN_STOP)

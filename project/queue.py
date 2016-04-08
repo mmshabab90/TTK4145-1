@@ -49,11 +49,11 @@ def closest_elev(floor):
     return closest_elev
 
 def print_task_stack():
-    #system('clear')
+    system('clear')
     for stack in task_stacks:
         print "-------------------"
         for task in stack:
-            print task, " ",
+            print task+1, " ",
     print "\n-------------------"
 
 def cal_time(stack, floor):
@@ -61,7 +61,8 @@ def cal_time(stack, floor):
     stops = len(task_stacks[elev])
     distance = N_FLOORS*2
 
-    if((elev_dir(elev) == DIRN_UP and floor > elev_cur_floor[elev]) or (elev_dir(elev) == DIRN_DOWN and floor < elev_cur_floor[elev])):
+    if((elev_dir(elev) == DIRN_UP and floor > elev_cur_floor[elev]) or
+       (elev_dir(elev) == DIRN_DOWN and floor < elev_cur_floor[elev])):
         distance = abs(elev_cur_floor[elev] - floor)
     elif(elev_dir(elev) == DIRN_UP and floor <= elev_cur_floor[elev]):
         distance = 2*max(task_stacks[elev]) - elev_cur_floor[elev] - floor
