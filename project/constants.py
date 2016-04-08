@@ -1,4 +1,4 @@
-N_ELEV = 3
+N_ELEV = 1
 
 #Number of floors. Hardware-dependent, do not modify.
 N_FLOORS = 4
@@ -16,3 +16,8 @@ BUTTON_COMMAND = 2
 
 IDLE = 0
 RUNNING = 1
+
+
+#Time weighting
+TIME_BETWEEN_FLOORS = 5
+STOP_TIME = 10
