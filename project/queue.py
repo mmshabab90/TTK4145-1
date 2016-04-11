@@ -1,14 +1,20 @@
 import elev
+import socket
 from os import system
 from constants import *
 
+
+elev_ip_num = {}
 task_stacks = []
 elev_cur_floor = []
 
 def init(n_elev):
     for i in range(n_elev):
-        task_stacks.append([])
-        elev_cur_floor.append(0)
+        task_stacks.append([0])
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8",80))
+    elev_ip_num[s.getsockname()[0]] = 0
+    s.close()
 
 def assign_task(floor):
     elev = None
