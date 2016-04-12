@@ -5,7 +5,7 @@ import queue
 
 elev = cdll.LoadLibrary("../driver/driver.so")
 
-elev.elev_init(0)
+elev.elev_init(1)
 
 def check_buttons():
     for button_type in range(N_BUTTONS):

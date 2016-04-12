@@ -5,16 +5,22 @@ from constants import *
 
 
 elev_ip_num = {}
+
 task_stacks = []
 elev_cur_floor = []
 
+# def init(n_elev):
+#     for i in range(n_elev):
+#         task_stacks.append([0])
+#     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+#     s.connect(("8.8.8.8",80))
+#     elev_ip_num[s.getsockname()[0]] = 0
+#     s.close()
+
 def init(n_elev):
     for i in range(n_elev):
-        task_stacks.append([0])
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("8.8.8.8",80))
-    elev_ip_num[s.getsockname()[0]] = 0
-    s.close()
+        task_stacks.append([])
+        elev_cur_floor.append(0)
 
 def assign_task(floor):
     elev = None
@@ -55,7 +61,7 @@ def closest_elev(floor):
     return closest_elev
 
 def print_task_stack():
-    system('clear')
+    #system('clear')
     for stack in task_stacks:
         print "-------------------"
         for task in stack:

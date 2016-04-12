@@ -20,9 +20,6 @@ def check_and_assign(lock):
             button_pressed = False
 
 def main():
-    #Check for master on network, if not : state = master, else:
-    #Check for backup on network, if not : state = backup, else:
-    #State = client
     UDP_PORT = 39500
     state = None
     HOST, PORT = None,None
@@ -33,48 +30,7 @@ def main():
     sock.settimeout(3)
     broadcast_thread = Thread(target = network.master_broadcast, args = (),)
     try:
-        msg, addr = sock.recv(4096)
-        if (msg == 'master'):
-            state = 'client'
-    except (socket.timeout):
-        state = 'master'
-        broadcast_thread.setDaemon(True)
-        broadcast_thread.start()
-
-
-
-    if (state == 'master'):
-        HOST, PORT = 'localhost', 9998
-        server = network.ThreadedTCPServer((HOST,PORT), network.ClientHandler)
-        queue.init(N_ELEV)
-    lock = Lock()
-
-    button_thread = Thread(target = check_and_assign, args = (lock,))
-    task_thread = Thread(target = elev.go_to_floor, args = (lock,))
-    button_thread.setDaemon(True)
-    button_thread.start()
-
-    task_thread.setDaemon(True)
-    task_thread.start()
-
-    server.serve_forever()
-
-if __name__ == "__main__":
-    main()
-
-
-def main():
-    UDP_PORT = 39500
-    state = None
-    HOST, PORT = None,None
-    server = None
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    sock.bind(('', 39500))
-    sock.settimeout(3)
-    broadcast_thread = Thread(target = network.master_broadcast, args = (),)
-    try:
-        msg, addr = sock.recv(4096)
+        msg = sock.recv(4096)
         if (msg == 'master'):
             state = 'client'
     except (socket.timeout):
@@ -87,23 +43,41 @@ def main():
     button_thread.start()
     task_thread.setDaemon(True)
     task_thread.start()
-
 
     if(state == 'master'):
+        broadcast_thread.start()
         init_master()
+    else:
+        init_client()
+
 
 
 def init_master():
-    queue.init()
+    queue.init(N_ELEV)
     HOST, PORT = 'localhost', 9998
     server = network.ThreadedTCPServer((HOST,PORT), network.ClientHandler)
+    server.serve_forever()
+    print "hei"
+"""
     master_thread = Thread(target = master(), args = (),)
     master_thread.setDaemon(True)
     master_thread.start()
     master_thread.join()
+"""
 
 def init_client():
-    pass
+    client = network.Client('localhost', 9998)
+    worker = network.Msg_receiver(client, client.connection)
+    worker.daemon = True
+    worker.start()
+    running = True
+    while running:
+        raw = raw_input()
+        if raw == "exit":
+            running = False
+            client.disconnect()
+        else:
+            client.send_msg(raw)
 
 def init_backup():
     pass
@@ -118,3 +92,5 @@ def client():
 
 def backup():
     pass
+if __name__ == "__main__":
+    main()
