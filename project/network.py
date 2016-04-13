@@ -4,11 +4,12 @@ import SocketServer
 import socket
 import json
 import time
-
+from constants import *
 from threading import Thread
+from queue import Master
 
 class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
-    allow_reuse_address = True
+    SocketServer.TCPServer.allow_reuse_address = True
     daemon_threads = True
 
 class ClientHandler(SocketServer.BaseRequestHandler):
@@ -16,6 +17,7 @@ class ClientHandler(SocketServer.BaseRequestHandler):
         self.ip = self.client_address[0]
         self.port = self.client_address[1]
         self.connection = self.request
+        self.server.master.add_elevator(self.ip, SIMULATOR, self.server.lock)
 
     def handle(self):
         while True:
@@ -27,18 +29,7 @@ class ClientHandler(SocketServer.BaseRequestHandler):
 
             self.request.sendall(received)
 
-
-def master_broadcast():
-    UDP_PORT = 39500
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-    while (True):
-        sock.sendto('master', ('255.255.255.255', UDP_PORT))
-        time.sleep(1)
-
-
-class Client:
+class Client():
     def __init__(self, host, server_port):
         self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.host = host

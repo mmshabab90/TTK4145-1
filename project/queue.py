@@ -1,41 +1,27 @@
-import elev
 import socket
+import time
+from threading import Thread
 from os import system
 from constants import *
-
-class Elev(Master):
-    def __init__(self, ipaddr):
-        self.task_stack = []
-        self.current_floor = 0
-        self.ip = ipaddr
-
-    def insert_task(self, floor):
-        cur_dir = Master.elev_dir(self)
-        if ((self.current_floor < floor and cur_dir == DIRN_UP) or
-            (self.current_floor <= floor and cur_dir == DIRN_DOWN)):
-            for task in self.task_stack:
-                if (floor < task):
-                    self.task_stack.insert(self.task_stack.index(task), floor)
-                    return
-        else:
-            for task in self.task_stack:
-                if (floor > task):
-                    self.task_stack.insert(self.task_stack.index(task), floor)
-                    return
-        self.task_stack.append(floor)
-
+import elev
 
 class Master():
     def __init__(self):
+        self.alive = True
         self.elevators = {}
+        self.broadcaster = Thread(target = self.broadcast)
+        self.broadcaster.setDaemon(True)
+        self.broadcaster.start()
 
-    def add_elevator(self, ip):
-        self.elevators[ip] = Elev(ip)
+    def __exit__(self):
+        self.alive = False
+        self.broadcaster.join()
 
-    def
+    def add_elevator(self, ip, mode, lock):
+        self.elevators[ip] =  elev.Elev(ip, mode, lock)
 
     def assign_task(self, floor):
-        elev = None
+        print self
         if (not any(floor in elev.task_stack for elev in self.elevators.values())):
             if (all(elev.task_stack == [] for elev in self.elevators.values())):
                 elev = self.closest_elev(floor)
@@ -65,14 +51,14 @@ class Master():
         elev = self.elevators[elev_ip]
         stops = len(elev.task_stack)
 
-        if ((elev_dir(elev) == DIRN_UP and floor > elev.current_floor) or
-            (elev_dir(elev) == DIRN_DOWN and floor < elev.current_floor)):
+        if ((elev.elev_dir() == DIRN_UP and floor > elev.current_floor) or
+            (elev.elev_dir() == DIRN_DOWN and floor < elev.current_floor)):
             distance = abs(elev.current_floor - floor)
 
-        elif(elev_dir(elev) == DIRN_UP and floor <= elev.current_floor):
+        elif(elev.elev_dir() == DIRN_UP and floor <= elev.current_floor):
             distance = 2*max(elev.task_stack) - elev.current_floor - floor
 
-        elif(elev_dir(elev) == DIRN_DOWN and floor >= elev.current_floor):
+        elif(elev.elev_dir() == DIRN_DOWN and floor >= elev.current_floor):
             distance = elev.current_floor + floor
 
         else:
@@ -80,19 +66,18 @@ class Master():
 
         return stops*STOP_TIME + distance*TIME_BETWEEN_FLOORS
 
-    def elev_dir(elev):
-        if (elev.task_stack != []):
-            if(elev.current_floor < elev.task_stack[0]):
-                return DIRN_UP
-            else:
-                return DIRN_DOWN
-        else:
-            return DIRN_STOP
+    def broadcast(self):
+        UDP_PORT = 39500
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+        while (self.alive):
+            sock.sendto('master', ('255.255.255.255', UDP_PORT))
+            time.sleep(1)
 
-# def print_task_stack():
-#     #system('clear')
-#     for stack in task_stacks:
-#         print "-------------------"
-#         for task in stack:
-#             print task+1, " ",
-#     print "\n-------------------"
+    def print_task_stack(elev):
+        #system('clear')
+        print "-------------------"
+        for task in elev.task_stack:
+            print task+1, " ",
+        print "\n-------------------"
