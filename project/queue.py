@@ -27,15 +27,17 @@ class Elev(Master):
 
 class Master():
     def __init__(self):
-        self.elevators = []
+        self.elevators = {}
 
     def add_elevator(self, ip):
-        self.elevators.append(Elev(ip))
+        self.elevators[ip] = Elev(ip)
+
+    def
 
     def assign_task(self, floor):
         elev = None
-        if (not any(floor in stack for stack in self.elevators)):
-            if (all(tasks == [] for tasks in self.elevators)):
+        if (not any(floor in elev.task_stack for elev in self.elevators.values())):
+            if (all(elev.task_stack == [] for elev in self.elevators.values())):
                 elev = self.closest_elev(floor)
             else:
                 elev = self.fastest_elev(floor)
@@ -43,29 +45,25 @@ class Master():
 
     def closest_elev(self, floor):
         min_dist = N_FLOORS
-        closest_elev = None
         for elev in self.elevators:
-            elev_index = self.elevators.index(elev)
-            dist = abs(elev.current_floor - floor)
+            dist = abs(elevators[elev].current_floor - floor)
             if (dist < min_dist):
                 min_dist = dist
-                closest_elev = elev_index
+                closest_elev = elev
         return closest_elev
 
     def fastest_elev(self, floor):
-        fastest_elev = None
         shortest_time = 2*N_FLOORS*(STOP_TIME + TIME_BETWEEN_FLOORS)
         for elev in self.elevators:
-            time = cal_time(elev, floor)
+            time = self.cal_time(elev, floor)
             if (time < shortest_time):
                 shortest_time = time
-                fastest_elev = self.elevators.index(elev)
+                fastest_elev = elev
         return fastest_elev
 
-    def cal_time(elev, floor):
-        #elev_index = elev
+    def cal_time(self, elev_ip, floor):
+        elev = self.elevators[elev_ip]
         stops = len(elev.task_stack)
-        distance = N_FLOORS*2
 
         if ((elev_dir(elev) == DIRN_UP and floor > elev.current_floor) or
             (elev_dir(elev) == DIRN_DOWN and floor < elev.current_floor)):
@@ -90,3 +88,11 @@ class Master():
                 return DIRN_DOWN
         else:
             return DIRN_STOP
+
+# def print_task_stack():
+#     #system('clear')
+#     for stack in task_stacks:
+#         print "-------------------"
+#         for task in stack:
+#             print task+1, " ",
+#     print "\n-------------------"
