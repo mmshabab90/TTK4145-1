@@ -40,3 +40,4 @@ the most suited elevator to fulfill the request.
 
 ### Cost function
 The cost function calculates the minimum travel time.
+

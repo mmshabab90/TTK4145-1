@@ -36,6 +36,7 @@ def main():
     except (socket.timeout):
         state = 'master'
 
+    queue.init(N_ELEV)
     lock = Lock()
     button_thread = Thread(target = check_and_assign, args = (lock,))
     task_thread = Thread(target = elev.go_to_floor, args = (lock,))
@@ -53,11 +54,9 @@ def main():
 
 
 def init_master():
-    queue.init(N_ELEV)
     HOST, PORT = 'localhost', 9998
     server = network.ThreadedTCPServer((HOST,PORT), network.ClientHandler)
     server.serve_forever()
-    print "hei"
 """
     master_thread = Thread(target = master(), args = (),)
     master_thread.setDaemon(True)
