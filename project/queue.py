@@ -3,104 +3,90 @@ import socket
 from os import system
 from constants import *
 
+class Elev(Master):
+    def __init__(self, ipaddr):
+        self.task_stack = []
+        self.current_floor = 0
+        self.ip = ipaddr
 
-elev_ip_num = {}
-
-task_stacks = []
-elev_cur_floor = []
-
-# def init(n_elev):
-#     for i in range(n_elev):
-#         task_stacks.append([0])
-#     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-#     s.connect(("8.8.8.8",80))
-#     elev_ip_num[s.getsockname()[0]] = 0
-#     s.close()
-
-def init(n_elev):
-    for i in range(n_elev):
-        task_stacks.append([])
-        elev_cur_floor.append(0)
-
-def assign_task(floor):
-    elev = None
-    if(not any(floor in stack for stack in task_stacks)):
-        if(all(tasks == [] for tasks in task_stacks)):
-            elev = closest_elev(floor)
+    def insert_task(self, floor):
+        cur_dir = Master.elev_dir(self)
+        if ((self.current_floor < floor and cur_dir == DIRN_UP) or
+            (self.current_floor <= floor and cur_dir == DIRN_DOWN)):
+            for task in self.task_stack:
+                if (floor < task):
+                    self.task_stack.insert(self.task_stack.index(task), floor)
+                    return
         else:
-            elev = fastest_elev(floor)
-        insert_task(elev, floor)
-
-def insert_task(elev, floor):
-    cur_floor = elev_cur_floor[elev]
-    cur_dir = elev_dir(elev)
-    if((cur_floor < floor and cur_dir == DIRN_UP) or
-       (cur_floor <= floor and cur_dir == DIRN_DOWN)):
-        for task in task_stacks[elev]:
-            if (floor < task):
-                task_stacks[elev].insert(task_stacks[elev].index(task), floor)
-                return
-    else:
-        for task in task_stacks[elev]:
-            if (floor > task):
-                task_stacks[elev].insert(task_stacks[elev].index(task), floor)
-                return
-    task_stacks[elev].append(floor)
+            for task in self.task_stack:
+                if (floor > task):
+                    self.task_stack.insert(self.task_stack.index(task), floor)
+                    return
+        self.task_stack.append(floor)
 
 
+class Master():
+    def __init__(self):
+        self.elevators = []
 
-def closest_elev(floor):
-    min_dist = N_FLOORS
-    closest_elev = None
-    for stack in task_stacks:
-        elev = task_stacks.index(stack)
-        dist = abs(elev_cur_floor[elev]-floor)
-        if (dist < min_dist):
-            min_dist = dist
-            closest_elev = elev
-    return closest_elev
+    def add_elevator(self, ip):
+        self.elevators.append(Elev(ip))
 
-def print_task_stack():
-    #system('clear')
-    for stack in task_stacks:
-        print "-------------------"
-        for task in stack:
-            print task+1, " ",
-    print "\n-------------------"
+    def assign_task(self, floor):
+        elev = None
+        if (not any(floor in stack for stack in self.elevators)):
+            if (all(tasks == [] for tasks in self.elevators)):
+                elev = self.closest_elev(floor)
+            else:
+                elev = self.fastest_elev(floor)
+        elevators[elev].insert_task(floor)
 
-def cal_time(stack, floor):
-    elev = task_stacks.index(stack)
-    stops = len(task_stacks[elev])
-    distance = N_FLOORS*2
+    def closest_elev(self, floor):
+        min_dist = N_FLOORS
+        closest_elev = None
+        for elev in self.elevators:
+            elev_index = self.elevators.index(elev)
+            dist = abs(elev.current_floor - floor)
+            if (dist < min_dist):
+                min_dist = dist
+                closest_elev = elev_index
+        return closest_elev
 
-    if((elev_dir(elev) == DIRN_UP and floor > elev_cur_floor[elev]) or
-       (elev_dir(elev) == DIRN_DOWN and floor < elev_cur_floor[elev])):
-        distance = abs(elev_cur_floor[elev] - floor)
-    elif(elev_dir(elev) == DIRN_UP and floor <= elev_cur_floor[elev]):
-        distance = 2*max(task_stacks[elev]) - elev_cur_floor[elev] - floor
-    elif(elev_dir(elev) == DIRN_DOWN and floor >= elev_cur_floor[elev]):
-        distance = elev_cur_floor[elev] + floor
-    else:
-        distance = abs(elev_cur_floor[elev] - floor)
+    def fastest_elev(self, floor):
+        fastest_elev = None
+        shortest_time = 2*N_FLOORS*(STOP_TIME + TIME_BETWEEN_FLOORS)
+        for elev in self.elevators:
+            time = cal_time(elev, floor)
+            if (time < shortest_time):
+                shortest_time = time
+                fastest_elev = self.elevators.index(elev)
+        return fastest_elev
 
-    time = stops*STOP_TIME + distance*TIME_BETWEEN_FLOORS
-    return time
+    def cal_time(elev, floor):
+        #elev_index = elev
+        stops = len(elev.task_stack)
+        distance = N_FLOORS*2
 
-def fastest_elev(floor):
-    fastest_elev = None
-    smallest_time = 2*N_FLOORS*(STOP_TIME + TIME_BETWEEN_FLOORS)
-    for elev in task_stacks:
-        time = cal_time(elev,floor)
-        if(time<smallest_time):
-            smallest_time = time
-            fastest_elev = task_stacks.index(elev)
-    return fastest_elev
+        if ((elev_dir(elev) == DIRN_UP and floor > elev.current_floor) or
+            (elev_dir(elev) == DIRN_DOWN and floor < elev.current_floor)):
+            distance = abs(elev.current_floor - floor)
 
-def elev_dir(elev):
-    if (task_stacks[elev] != []):
-        if(elev_cur_floor[elev] < task_stacks[elev][0]):
-            return DIRN_UP
-        elif(elev_cur_floor[elev] > task_stacks[elev][0]):
-            return DIRN_DOWN
+        elif(elev_dir(elev) == DIRN_UP and floor <= elev.current_floor):
+            distance = 2*max(elev.task_stack) - elev.current_floor - floor
 
-    return DIRN_STOP
+        elif(elev_dir(elev) == DIRN_DOWN and floor >= elev.current_floor):
+            distance = elev.current_floor + floor
+
+        else:
+            distance = abs(elev.current_floor - floor)
+
+        return stops*STOP_TIME + distance*TIME_BETWEEN_FLOORS
+
+    def elev_dir(elev):
+        if (elev.task_stack != []):
+            if(elev.current_floor < elev.task_stack[0]):
+                return DIRN_UP
+            else:
+                return DIRN_DOWN
+        else:
+            return DIRN_STOP
