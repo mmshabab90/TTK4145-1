@@ -8,8 +8,8 @@ class Elev(queue.Master):
     def __init__(self, ipaddr, mode, lock):
         self.alive = True
         self.lock = lock
-        self.task_stack = []
-        self.current_floor = 0
+        self.task_stack = [0]
+        self.current_floor = N_FLOORS
         self.ip = ipaddr
         self.elev = cdll.LoadLibrary("../driver/driver.so")
         self.elev.elev_init(mode)
@@ -28,18 +28,26 @@ class Elev(queue.Master):
     def insert_task(self, floor):
         cur_dir = self.elev_dir()
         if (floor not in self.task_stack):
-            if ((self.current_floor < floor and cur_dir == DIRN_UP) or
+            if (cur_dir == DIRN_STOP):
+                self.lock.acquire(True)
+                self.task_stack.append(floor)
+                self.lock.release()
+                return
+            elif ((self.current_floor < floor and cur_dir == DIRN_UP) or
                 (self.current_floor <= floor and cur_dir == DIRN_DOWN)):
                 for task in self.task_stack:
                     if (floor < task):
+                        self.lock.acquire(True)
                         self.task_stack.insert(self.task_stack.index(task), floor)
+                        self.lock.release()
                         return
             else:
                 for task in self.task_stack:
                     if (floor > task):
+                        self.lock.acquire(True)
                         self.task_stack.insert(self.task_stack.index(task), floor)
+                        self.lock.release()
                         return
-            self.task_stack.append(floor)
 
     def elev_dir(self):
         if (self.task_stack != []):
@@ -56,7 +64,6 @@ class Elev(queue.Master):
             if (self.task_stack != []):
                 while (self.current_floor != self.task_stack[0]):
                     if (self.task_stack[0] > self.current_floor):
-                        #and self.elev_dir() != DIRN_UP):
                         self.elev.elev_set_motor_direction(DIRN_UP)
                     else:
                         self.elev.elev_set_motor_direction(DIRN_DOWN)
@@ -76,20 +83,30 @@ class Elev(queue.Master):
     def button_handler(self):
         #Incapable of multiple simultaneous button presses.
         #Consider moving to a list based system
-        button_pressed = False
+        #button_pressed = False
         print "Start button handler"
+        prev = [[0 for i in range(N_BUTTONS)] for j in range(N_FLOORS)]
         while (self.alive):
-            request = (-1,-1)
-            for button_type in range(N_BUTTONS):
-                for floor in range(N_FLOORS):
-                    if (self.elev.elev_get_button_signal(button_type, floor)):
-                        request = (button_type, floor)
-            if (request != (-1,-1) and not button_pressed):
-                button_pressed = True
-                #TODO: Send external buttons to master
-                self.lock.acquire(True)
-                self.insert_task(request[1])
-                self.lock.release()
-                queue.Master.print_task_stack(self)
-            if (request == (-1,-1) and button_pressed):
-                button_pressed = False
+            for floor in range(N_FLOORS):
+                for button in range(N_BUTTONS):
+                    v = self.elev.elev_get_button_signal(button, floor)
+                    if (v and v != prev[floor][button]):
+                        print prev
+                        self.insert_task(floor)
+                    queue.Master.print_task_stack(self)
+                    prev[floor][button] = v
+
+            # request = (-1,-1)
+            # for button_type in range(N_BUTTONS):
+            #     for floor in range(N_FLOORS):
+            #         if (self.elev.elev_get_button_signal(button_type, floor)):
+            #             request = (button_type, floor)
+            # if (request != (-1,-1) and not button_pressed):
+            #     button_pressed = True
+            #     #TODO: Send external buttons to master
+            #     self.lock.acquire(True)
+            #     self.insert_task(request[1])
+            #     self.lock.release()
+            #     queue.Master.print_task_stack(self)
+            # if (request == (-1,-1) and button_pressed):
+            #     button_pressed = False
