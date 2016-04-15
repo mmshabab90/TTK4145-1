@@ -5,12 +5,11 @@ import queue
 import time
 
 class Elev(queue.Master):
-    def __init__(self, ipaddr, mode, lock):
+    def __init__(self, mode, lock):
         self.alive = True
         self.lock = lock
         self.task_stack = [0]
         self.current_floor = N_FLOORS
-        self.ip = ipaddr
         self.elev = cdll.LoadLibrary("../driver/driver.so")
         self.elev.elev_init(mode)
         self.movement = Thread(target = self.movement_handler)

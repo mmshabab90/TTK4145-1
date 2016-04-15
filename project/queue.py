@@ -18,7 +18,7 @@ class Master():
         self.broadcaster.join()
 
     def add_elevator(self, ip, mode, lock):
-        self.elevators[ip] =  elev.Elev(ip, mode, lock)
+        self.elevators[ip] =  elev.Elev(mode, lock)
 
     def assign_task(self, floor):
         print self
