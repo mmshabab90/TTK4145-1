@@ -51,14 +51,14 @@ class Master():
         elev = self.elevators[elev_ip]
         stops = len(elev.task_stack)
 
-        if ((elev.elev_dir() == DIRN_UP and floor > elev.current_floor) or
-            (elev.elev_dir() == DIRN_DOWN and floor < elev.current_floor)):
+        if ((elev.next_dir() == DIRN_UP and floor > elev.current_floor) or
+            (elev.next_dir() == DIRN_DOWN and floor < elev.current_floor)):
             distance = abs(elev.current_floor - floor)
 
-        elif(elev.elev_dir() == DIRN_UP and floor <= elev.current_floor):
+        elif(elev.next_dir() == DIRN_UP and floor <= elev.current_floor):
             distance = 2*max(elev.task_stack) - elev.current_floor - floor
 
-        elif(elev.elev_dir() == DIRN_DOWN and floor >= elev.current_floor):
+        elif(elev.next_dir() == DIRN_DOWN and floor >= elev.current_floor):
             distance = elev.current_floor + floor
 
         else:
@@ -76,8 +76,8 @@ class Master():
             time.sleep(1)
 
     def print_task_stack(elev):
-        #system('clear')
+        system('clear')
         print "-------------------"
         for task in elev.task_stack:
-            print task+1, " ",
+            print task, " ",
         print "\n-------------------"

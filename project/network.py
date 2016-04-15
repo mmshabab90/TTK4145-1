@@ -17,7 +17,7 @@ class ClientHandler(SocketServer.BaseRequestHandler):
         self.ip = self.client_address[0]
         self.port = self.client_address[1]
         self.connection = self.request
-        self.server.master.add_elevator(self.ip, SIMULATOR, self.server.lock)
+        self.server.master.add_elevator(self.ip, MODEL, self.server.lock)
 
     def handle(self):
         while True:

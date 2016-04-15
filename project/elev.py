@@ -26,30 +26,37 @@ class Elev(queue.Master):
         self.buttons.join()
 
     def insert_task(self, floor):
-        cur_dir = self.elev_dir()
+        next_dir = self.next_dir()
         if (floor not in self.task_stack):
-            if (cur_dir == DIRN_STOP):
+            if (next_dir == DIRN_STOP):
                 self.lock.acquire(True)
                 self.task_stack.append(floor)
                 self.lock.release()
-                return
-            elif ((self.current_floor < floor and cur_dir == DIRN_UP) or
-                (self.current_floor <= floor and cur_dir == DIRN_DOWN)):
+                queue.Master.print_task_stack(self)
+            elif ((self.current_floor < floor and next_dir == DIRN_UP) or
+                (self.current_floor <= floor and next_dir == DIRN_DOWN)):
                 for task in self.task_stack:
                     if (floor < task):
                         self.lock.acquire(True)
                         self.task_stack.insert(self.task_stack.index(task), floor)
                         self.lock.release()
+                        queue.Master.print_task_stack(self)
                         return
+                self.task_stack.append(floor)
+                queue.Master.print_task_stack(self)
             else:
                 for task in self.task_stack:
                     if (floor > task):
                         self.lock.acquire(True)
                         self.task_stack.insert(self.task_stack.index(task), floor)
                         self.lock.release()
+                        queue.Master.print_task_stack(self)
                         return
+                self.task_stack.append(floor)
+                queue.Master.print_task_stack(self)
+            queue.Master.print_task_stack(self)
 
-    def elev_dir(self):
+    def next_dir(self):
         if (self.task_stack != []):
             if(self.current_floor < self.task_stack[0]):
                 return DIRN_UP
@@ -62,23 +69,29 @@ class Elev(queue.Master):
         print "start move handler"
         while (self.alive):
             if (self.task_stack != []):
+                direction_set = 0               #NEW
+
                 while (self.current_floor != self.task_stack[0]):
-                    if (self.task_stack[0] > self.current_floor):
+                    if (self.task_stack[0] > self.current_floor and not direction_set): 
                         self.elev.elev_set_motor_direction(DIRN_UP)
-                    else:
+                        direction_set = 1       #NEW
+                    elif(self.task_stack[0] < self.current_floor and not direction_set):
                         self.elev.elev_set_motor_direction(DIRN_DOWN)
+                        direction_set = 1       #NEW
                     floor_sensor = self.elev.elev_get_floor_sensor_signal()
                     if (floor_sensor != -1 and floor_sensor != self.current_floor):
                         self.current_floor = floor_sensor
                         self.elev.elev_set_floor_indicator(floor_sensor)
                 self.elev.elev_set_motor_direction(DIRN_STOP)
+                direction_set = 0               #NEW
                 self.elev.elev_set_button_lamp(BUTTON_COMMAND, self.task_stack[0], 0)
-                self.lock.acquire(True)
-                self.task_stack.pop(0)
-                self.lock.release()
                 self.elev.elev_set_door_open_lamp(1)
                 time.sleep(3)
                 self.elev.elev_set_door_open_lamp(0)
+                self.lock.acquire(True)
+                self.task_stack.pop(0)
+                self.lock.release()
+                queue.Master.print_task_stack(self)
 
     def button_handler(self):
         #Incapable of multiple simultaneous button presses.
@@ -91,9 +104,7 @@ class Elev(queue.Master):
                 for button in range(N_BUTTONS):
                     v = self.elev.elev_get_button_signal(button, floor)
                     if (v and v != prev[floor][button]):
-                        print prev
                         self.insert_task(floor)
-                    queue.Master.print_task_stack(self)
                     prev[floor][button] = v
 
             # request = (-1,-1)
@@ -110,3 +121,20 @@ class Elev(queue.Master):
             #     queue.Master.print_task_stack(self)
             # if (request == (-1,-1) and button_pressed):
             #     button_pressed = False
+            
+
+
+        #FORSLAG
+        #print "Start button handler"
+        #prev = [[0 for i in range(N_BUTTONS)] for j in range(N_FLOORS)]
+        #while (self.alive):
+        #    for floor in range(N_FLOORS):
+        #        cmnd = self.elev.elev_get_button_signal(BUTTON_COMMAND, floor)
+        #        if (cmnd and cmnd != prev[floor][BUTTON_COMMAND]):
+        #            self.insert_task(floor)
+        #        prev[floor][BUTTON_COMMAND] = cmnd
+        #        for button in range(N_BUTTONS-1):
+        #            req = self.elev.elev_get_button_signal(button, floor)
+        #            if (req and req != prev[floor][button]):
+        #                #Speak with master
+        #            prev[floor][button] = v
