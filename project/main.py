@@ -37,12 +37,13 @@ def main():
         print "Ready to serve"
         server.serve_forever()
     else:
-        client = network.Client(master_addr, 10001)
+        client = network.Client(master_addr[0], 10001)
         worker = network.Msg_receiver(client, client.connection)
         worker.setDaemon(True)
         worker.start()
         lock = Lock()
         elev = Elev(ELEV_MODE, lock)
+        elev.run()
         running = True
         while running:
             raw = raw_input()

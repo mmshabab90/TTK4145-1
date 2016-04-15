@@ -6,12 +6,17 @@ import time
 
 class Elev(queue.Master):
     def __init__(self, mode, lock):
-        self.alive = True
+        self.alive = False
         self.lock = lock
+        self.mode = mode
         self.task_stack = [0]
         self.current_floor = N_FLOORS
+
+
+    def run(self):
+        self.alive = True
         self.elev = cdll.LoadLibrary("../driver/driver.so")
-        self.elev.elev_init(mode)
+        self.elev.elev_init(self.mode)
         self.movement = Thread(target = self.movement_handler)
         self.buttons = Thread(target = self.button_handler)
         self.movement.setDaemon(True)
@@ -20,9 +25,10 @@ class Elev(queue.Master):
         self.buttons.start()
 
     def __exit__(self):
-        self.alive = False
-        self.movement.join()
-        self.buttons.join()
+        if (self.alive):
+            self.alive = False
+            self.movement.join()
+            self.buttons.join()
 
     def insert_task(self, floor):
         next_dir = self.next_dir()
