@@ -4,11 +4,15 @@ from threading import Thread
 from os import system
 from constants import *
 import elev
+import network
 
-class Master():
+class Master(object):
     def __init__(self):
         self.alive = True
         self.elevators = {}
+        self.ip = network.get_ip()
+        self.server = network.ThreadedTCPServer((self.ip,10001), network.ClientHandler)
+        self.server.master = self
         self.broadcaster = Thread(target = self.broadcast)
         self.broadcaster.setDaemon(True)
         self.broadcaster.start()
@@ -17,17 +21,15 @@ class Master():
         self.alive = False
         self.broadcaster.join()
 
-    def add_elevator(self, ip, mode, lock):
-        self.elevators[ip] =  elev.Elev(mode, lock)
+    def add_elevator(self, ip, mode):
+        self.elevators[ip] =  elev.Elev(mode)
 
     def assign_task(self, floor):
-        print self
         if (not any(floor in elev.task_stack for elev in self.elevators.values())):
             if (all(elev.task_stack == [] for elev in self.elevators.values())):
-                elev = self.closest_elev(floor)
+                return self.closest_elev(floor)
             else:
-                elev = self.fastest_elev(floor)
-        elevators[elev].insert_task(floor)
+                return self.fastest_elev(floor)
 
     def closest_elev(self, floor):
         min_dist = N_FLOORS
