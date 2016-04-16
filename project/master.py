@@ -7,17 +7,22 @@ import elev
 import network
 
 class Master(object):
-    def __init__(self):
+    def __init__(self, state, broadcast_port):
         self.alive = True
         self.elevators = {}
         self.ip = network.get_ip()
-        self.server = network.ThreadedTCPServer((self.ip,10001), network.ClientHandler)
-        self.server.master = self
-        self.server.clients = {}
         self.external_buttons = [False for floor in range(N_FLOORS)]
-        self.broadcaster = Thread(target = self.broadcast)
+        self.broadcaster = Thread(target = self.broadcast, args=(state, broadcast_port),)
         self.broadcaster.setDaemon(True)
         self.broadcaster.start()
+
+    def run(self):
+        self.server = network.ThreadedTCPServer((self.ip,10001), network.ClientHandler)
+        self.server.clients = {}
+        self.server.master = self
+        self.server_thread = Thread(target = self.run_server)
+        self.server_thread.setDaemon(True)
+        self.server_thread.start()
 
     def __exit__(self):
         self.alive = False
@@ -70,14 +75,18 @@ class Master(object):
 
         return stops*STOP_TIME + distance*TIME_BETWEEN_FLOORS
 
-    def broadcast(self):
-        UDP_PORT = 39500
+    def broadcast(self, state, port):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         while (self.alive):
-            sock.sendto('master', ('255.255.255.255', UDP_PORT))
+            sock.sendto(state, ('255.255.255.255', port))
             time.sleep(1)
+
+    def run_server(self):
+        self.server.timeout = None
+        while (True):
+            self.server.handle_request()
 
     def print_task_stack(elev):
         system('clear')
@@ -97,4 +106,4 @@ class Master(object):
                 for task in elev.task_stack:
                     print task, " ",
                 print "\n-------------------"
-            time.sleep(0.25)
+            time.sleep(0.5)
