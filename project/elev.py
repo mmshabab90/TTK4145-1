@@ -2,10 +2,10 @@ from ctypes import *
 from constants import *
 from threading import Thread, Lock
 import network
-import queue
+import master
 import time
 
-class Elev(queue.Master):
+class Elev(master.Master):
     def __init__(self, mode):
         self.alive = False
         self.lock = Lock()
@@ -96,7 +96,7 @@ class Elev(queue.Master):
                 self.lock.acquire(True)
                 self.task_stack.pop(0)
                 self.lock.release()
-                queue.Master.print_task_stack(self)
+                master.Master.print_task_stack(self)
 
     def button_handler(self):
         print "Start button handler"

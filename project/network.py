@@ -6,7 +6,7 @@ import json
 import time
 from constants import *
 from threading import Thread
-from queue import Master
+from master import Master
 
 class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
     allow_reuse_address = True

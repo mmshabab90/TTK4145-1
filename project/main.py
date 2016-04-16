@@ -1,5 +1,5 @@
 from elev import Elev
-from queue import Master
+from master import Master
 import network
 import socket
 
