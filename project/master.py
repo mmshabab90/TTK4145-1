@@ -34,7 +34,7 @@ class Master(object):
     def closest_elev(self, floor):
         min_dist = N_FLOORS
         for elev in self.elevators:
-            dist = abs(elevators[elev].current_floor - floor)
+            dist = abs(self.elevators[elev].current_floor - floor)
             if (dist < min_dist):
                 min_dist = dist
                 closest_elev = elev

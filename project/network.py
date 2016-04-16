@@ -23,7 +23,6 @@ class ClientHandler(SocketServer.BaseRequestHandler):
     def handle(self):
         while True:
             received_string = self.connection.recv(4096)
-            print received_string
             if (received_string):
                 self.parser.parse(received_string)
                 #Check message type:

@@ -74,21 +74,23 @@ class Elev(master.Master):
         print "start move handler"
         while (self.alive):
             if (self.task_stack != []):
-                direction_set = 0               #NEW
-
+                direction_set = 0
                 while (self.current_floor != self.task_stack[0]):
                     if (self.task_stack[0] > self.current_floor and not direction_set):
                         self.elev.elev_set_motor_direction(DIRN_UP)
-                        direction_set = 1       #NEW
+                        direction_set = 1
                     elif(self.task_stack[0] < self.current_floor and not direction_set):
                         self.elev.elev_set_motor_direction(DIRN_DOWN)
-                        direction_set = 1       #NEW
+                        direction_set = 1
                     floor_sensor = self.elev.elev_get_floor_sensor_signal()
                     if (floor_sensor != -1 and floor_sensor != self.current_floor):
                         self.current_floor = floor_sensor
                         self.elev.elev_set_floor_indicator(floor_sensor)
+                        self.client.send_msg('floor_update',
+                                             self.current_floor,
+                                             self.ip)
                 self.elev.elev_set_motor_direction(DIRN_STOP)
-                direction_set = 0               #NEW
+                direction_set = 0
                 self.elev.elev_set_button_lamp(BUTTON_COMMAND, self.task_stack[0], 0)
                 self.elev.elev_set_door_open_lamp(1)
                 time.sleep(3)
@@ -96,6 +98,9 @@ class Elev(master.Master):
                 self.lock.acquire(True)
                 self.task_stack.pop(0)
                 self.lock.release()
+                self.client.send_msg('queue_update',
+                                     self.task_stack,
+                                     self.ip)
                 master.Master.print_task_stack(self)
 
     def button_handler(self):
