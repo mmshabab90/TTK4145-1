@@ -17,31 +17,36 @@ class ClientHandler(SocketServer.BaseRequestHandler):
         self.ip = self.client_address[0]
         self.port = self.client_address[1]
         self.connection = self.request
+        self.server.clients[self.ip] = self
         self.server.master.add_elevator(self.ip, ELEV_MODE)
-        self.parser = Msg_parser(self.server.master)
+        self.parser = Msg_parser(self.server.master, self)
 
     def handle(self):
         while True:
             received_string = self.connection.recv(4096)
             if (received_string):
                 self.parser.parse(received_string)
-                #Check message type:
-                #'External'     - (floor number) find best elevator call assign_task(floor)
-                #'Queue update' - (task_stack) set oldTS = NewTS at right ip
-                #'Floor update' - (cur floor number) set current floor variable
+
+    def send_msg(self, msg_type, data):
+        msg = {'type':msg_type, 'data':data}
+        self.connection.sendall(json.dumps(msg))
+
 
 class Client():
-    def __init__(self, host, server_port):
+    def __init__(self, host, server_port, elev):
         self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.host = host
         self.server_port = server_port
+        self.elev = elev
         self.run()
 
     def run(self):
         self.connection.connect((self.host, self.server_port))
 
-    def receive_msg(self, msg):
-        print "Received:", msg
+    def handle_msg(self, msg):
+        received = json.loads(msg)
+        if (received['type'] == 'queue_update'):
+            self.elev.task_stack = received['data']
 
     def disconnect(self):
         self.connection.close()
@@ -61,11 +66,12 @@ class Msg_receiver(Thread):
         while (True):
             data = self.connection.recv(4096)
             if (data):
-                self.client.receive_msg(data)
+                self.client.handle_msg(data)
 
 class Msg_parser():
-    def __init__(self, master):
+    def __init__(self, master, client_handler):
         self.master = master
+        self.client_handler = client_handler
         self.possible_types = {
             'external': self.parse_external,
             'queue_update': self.parse_queue_update,
@@ -81,11 +87,13 @@ class Msg_parser():
             return
 
     def parse_external(self, data):
-        ip = self.master.assign_task(data['data'])
+        ip = self.master.best_elev(data['data'])
         print "Ip:", ip
         print "Data:", data['data']
         if (ip):
             self.master.elevators[ip].insert_task(data['data'])
+            self.client_handler.server.clients[ip].send_msg('queue_update',
+                                         self.master.elevators[ip].task_stack)
 
     def parse_queue_update(self, data):
         self.master.elevators[data['ip']].task_stack = data['data']

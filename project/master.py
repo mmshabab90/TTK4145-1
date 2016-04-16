@@ -13,6 +13,7 @@ class Master(object):
         self.ip = network.get_ip()
         self.server = network.ThreadedTCPServer((self.ip,10001), network.ClientHandler)
         self.server.master = self
+        self.server.clients = {}
         self.broadcaster = Thread(target = self.broadcast)
         self.broadcaster.setDaemon(True)
         self.broadcaster.start()
@@ -24,7 +25,7 @@ class Master(object):
     def add_elevator(self, ip, mode):
         self.elevators[ip] =  elev.Elev(mode)
 
-    def assign_task(self, floor):
+    def best_elev(self, floor):
         if (not any(floor in elev.task_stack for elev in self.elevators.values())):
             if (all(elev.task_stack == [] for elev in self.elevators.values())):
                 return self.closest_elev(floor)

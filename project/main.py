@@ -41,9 +41,8 @@ def main():
             raw = raw_input()
             if raw == "exit":
                 running = False
-                client.disconnect()
+                elev.client.disconnect()
             else:
-                client.send_msg(raw)
-
+                pass
 if __name__ == "__main__":
     main()

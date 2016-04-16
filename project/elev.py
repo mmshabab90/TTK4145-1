@@ -16,7 +16,7 @@ class Elev(master.Master):
 
     def run(self):
         self.alive = True
-        self.client = network.Client(self.master_addr, 10001)
+        self.client = network.Client(self.master_addr, 10001, self)
         self.ip = network.get_ip()
         self.worker = network.Msg_receiver(self.client, self.client.connection)
         self.worker.setDaemon(True)
