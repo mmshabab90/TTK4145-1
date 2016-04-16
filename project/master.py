@@ -14,6 +14,7 @@ class Master(object):
         self.server = network.ThreadedTCPServer((self.ip,10001), network.ClientHandler)
         self.server.master = self
         self.server.clients = {}
+        self.external_buttons = [False for floor in range(N_FLOORS)]
         self.broadcaster = Thread(target = self.broadcast)
         self.broadcaster.setDaemon(True)
         self.broadcaster.start()
@@ -84,3 +85,16 @@ class Master(object):
         for task in elev.task_stack:
             print task, " ",
         print "\n-------------------"
+
+    def print_system(self):
+        while (True):
+            system('clear')
+            print "External buttons pressed:"
+            print self.external_buttons
+            for elev in self.elevators.values():
+                print "\n", self.elevators.keys()[self.elevators.values().index(elev)][-3:],
+                print "----------[", elev.current_floor, "]"
+                for task in elev.task_stack:
+                    print task, " ",
+                print "\n-------------------"
+            time.sleep(0.25)

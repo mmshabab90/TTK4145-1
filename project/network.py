@@ -22,10 +22,25 @@ class ClientHandler(SocketServer.BaseRequestHandler):
         self.parser = Msg_parser(self.server.master, self)
 
     def handle(self):
-        while True:
+        connected = True
+        while connected:
             received_string = self.connection.recv(4096)
             if (received_string):
                 self.parser.parse(received_string)
+            else:
+                connected = False
+
+    def finish(self):
+        remaining_queue = self.server.master.elevators[self.ip].task_stack
+        del self.server.master.elevators[self.ip]
+        del self.server.clients[self.ip]
+        for task in remaining_queue:
+            ip = self.server.master.best_elev(task)
+            if (ip and self.server.master.external_buttons[task]):
+                self.server.master.elevators[ip].insert_task(task)
+        for elev in self.server.master.elevators:
+            self.server.clients[elev].send_msg('queue_update',
+                                               self.server.master.elevators[elev].task_stack)
 
     def send_msg(self, msg_type, data):
         msg = {'type':msg_type, 'data':data}
@@ -80,22 +95,23 @@ class Msg_parser():
 
     def parse(self, data):
         data = json.loads(data)
-        print data
+        #print data
         if data['type'] in self.possible_types:
             self.possible_types[data['type']](data)
         else:
             return
 
     def parse_external(self, data):
+        self.master.external_buttons[data['data']] = True
         ip = self.master.best_elev(data['data'])
-        print "Ip:", ip
-        print "Data:", data['data']
         if (ip):
             self.master.elevators[ip].insert_task(data['data'])
             self.client_handler.server.clients[ip].send_msg('queue_update',
                                          self.master.elevators[ip].task_stack)
 
     def parse_queue_update(self, data):
+        if (len(self.master.elevators[data['ip']].task_stack) > len(data['data'])):
+            self.master.external_buttons[self.master.elevators[data['ip']].task_stack[0]] = False
         self.master.elevators[data['ip']].task_stack = data['data']
 
     def parse_floor_update(self, data):

@@ -26,8 +26,10 @@ def main():
         print "Initiating.."
         master = Master()
         print "Ready to serve"
+        print_thread = Thread(target = master.print_system)
+        print_thread.setDaemon(True)
+        print_thread.start()
         master.server.serve_forever()
-        print "hei"
     else:
         # client = network.Client(master_addr[0], 10001)
         # worker = network.Msg_receiver(client, client.connection)
