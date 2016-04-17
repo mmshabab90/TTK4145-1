@@ -51,7 +51,7 @@ class ClientHandler(SocketServer.BaseRequestHandler):
     def send_msg(self, msg_type, data):
         msg = {'type':msg_type, 'data':data}
         with self.server.master.lock:
-            self.connection.sendall(json.dumps(msg))
+            self.connection.send(json.dumps(msg))
 
 
 class Client():
@@ -73,6 +73,13 @@ class Client():
             self.elev.state = 'backup'
         elif (received['type'] == 'backup_ip'):
             self.elev.backup_ip = received['data']
+        elif (received['type'] == 'backup_update'):
+            for update in received['data']:
+                if (update == 'queue'):
+                    self.elev.backup.elevators[received['ip']].task_stack = received['data'][update]
+                elif (update == 'external'):
+                    self.elev.backup.external_buttons = received['data'][update]
+
 
 
     def disconnect(self):
@@ -81,7 +88,7 @@ class Client():
     def send_msg(self, msg_type, data, ip):
         msg = {'type':msg_type, 'data':data, 'ip':ip}
         with self.elev.lock:
-            self.connection.sendall(json.dumps(msg))
+            self.connection.send(json.dumps(msg))
 
 class Msg_receiver(Thread):
     def __init__(self, client, connection):
@@ -100,6 +107,7 @@ class Msg_parser():
     def __init__(self, master, client_handler):
         self.master = master
         self.client_handler = client_handler
+        self.server = self.client_handler.server
         self.possible_types = {
             'external': self.parse_external,
             'queue_update': self.parse_queue_update,
@@ -119,23 +127,34 @@ class Msg_parser():
         ip = self.master.best_elev(data['data'])
         if (ip):
             self.master.elevators[ip].insert_task(data['data'])
-            self.client_handler.server.clients[ip].send_msg('queue_update',
-                                         self.master.elevators[ip].task_stack)
-        #notify backup
-
+            self.server.clients[ip].send_msg('queue_update',
+                                             self.master.elevators[ip].task_stack)
+        if (self.master.backup_ip):
+            self.server.clients[self.master.backup_ip].send_msg('backup_update',
+                                                                {'queue':self.master.elevators[ip].task_stack,
+                                                                 'external':self.master.external_buttons,
+                                                                 'ip':ip})
     def parse_queue_update(self, data):
         if (len(self.master.elevators[data['ip']].task_stack) > len(data['data'])):
             self.master.external_buttons[self.master.elevators[data['ip']].task_stack[0]] = False
-            #notify backup
         self.master.elevators[data['ip']].task_stack = data['data']
-        #Notify backup
+        if (self.master.backup_ip):
+            self.server.clients[self.master.backup_ip].send_msg('backup_update',
+                                                                {'queue':self.master.elevators[ip].task_stack,
+                                                                 'external':self.master.external_buttons,
+                                                                 'ip':data['ip']})
 
     def parse_floor_update(self, data):
         self.master.elevators[data['ip']].current_floor = data['data']
-        #notify backup
+        if (self.master.backup_ip):
+            self.server.clients[self.master.backup_ip].send_msg('backup_update',
+                                                                {'queue':self.master.elevators[ip].task_stack,
+                                                                 'ip':data['ip']})
 
     def parse_request_backup(self, data):
         self.master.server.clients[data['ip']].send_msg('backup_ip', self.master.backup_ip)
+
+    
 
 
 def get_ip():
@@ -151,5 +170,6 @@ def socket_setup(port):
     sock.bind(('', port))
     sock.settimeout(3)
     return sock
+
 
 

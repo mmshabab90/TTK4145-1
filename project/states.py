@@ -1,28 +1,29 @@
 import network
 import socket
 
-def master(elev):
-    while (elev.state == 'master'):
+def master():
+    while (True):
         try:
             pass
     	except(KeyboardInterrupt):
-            running = False
-            listen_backup.close()
-
-def backup(elev):
-        listen_master = network.socket_setup( 39500)
-        backup = True
-        while backup:
-                try:
-                        msg = listen_master.recv(4096)
-                except(socket.timeout):
+            print "Ctrl+C: User ended process"
+            
+def backup(elev, backup):
+        listen_master = network.socket_setup(39500)
+        while elev.state == 'backup':
+            backup.print_system()
+            try:
+                msg = listen_master.recv(4096)
+            except(socket.timeout):
+                state = 'master'
+                listen_master.close()
+                backup.backup_ip = ''
+                backup.run()
                 #Change state to master
                 #Clear all backup attributes
-                        backup = False
-                        listen_master.close()
-                except(KeyboardInterrupt):
-                        backup = False
-                        listen_master.close()
+            except(KeyboardInterrupt):
+                backup = False
+                listen_master.close()
 
 def slave(elev):
 	while (elev.state == 'slave'):

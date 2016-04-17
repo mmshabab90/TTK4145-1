@@ -11,7 +11,7 @@ class Master(object):
         self.alive = True
         self.elevators = {}
         self.ip = network.get_ip()
-        self.backup_ip = None
+        self.backup_ip = ''
         self.external_buttons = [False for floor in range(N_FLOORS)]
         self.lock = Lock()
 
@@ -103,6 +103,7 @@ class Master(object):
             system('clear')
             print "External buttons pressed:"
             print self.external_buttons
+            print "Backup:", self.backup_ip[-3:]
             for elev in self.elevators.values():
                 print "\n", self.elevators.keys()[self.elevators.values().index(elev)][-3:],
                 print "----------[", elev.current_floor, "]"

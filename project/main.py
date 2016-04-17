@@ -11,7 +11,7 @@ def main():
     m_sock = network.socket_setup(39500)
     try:
         msg, master_addr = m_sock.recvfrom(4096)
-        #state = 'client'
+
         b_sock = network.socket_setup(39501)
         try:
             msg, backup_addr = b_sock.recvfrom(4096)
@@ -37,13 +37,7 @@ def main():
         elev.state = 'master'
         elev.master_addr = master.ip
         elev.run()
-        states.master(elev)
-
-    #Run until it die, or master die
-    #if (old_master dies):
-    #   old_backup -> new_master
-    #   new_master setup one new backup on one arbitrary elev
-    #As new master need to notify one elev to become new backup
+        states.master()
 
     else:
         elev = Elev(ELEV_MODE)
@@ -52,18 +46,9 @@ def main():
         Running = True
         states.slave(elev)
         backup = Master()
-        states.backup(elev)
-        backup.run()
-        states.master(elev)
-
-    #Run til it die, or master/backup die
-    #if(elev die):
-    #   do task_stack, become unavailable (door close after taskstack done)
-    #if(master die):
-    #   setup new client to new master/server
-    #   listen for command setup backup(from master)
-    #if(back_up die):
-    #   listen for command setup backup(from master)
+        elev.backup = backup
+        states.backup(elev, backup)
+        states.master()
 
 if __name__ == "__main__":
     main()
