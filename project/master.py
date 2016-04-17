@@ -98,7 +98,7 @@ class Master(object):
 
     def print_system(self):
         while (True):
-            #system('clear')
+            system('clear')
             print "External buttons pressed:"
             print self.external_buttons
             for elev in self.elevators.values():

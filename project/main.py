@@ -37,7 +37,7 @@ def main():
         elev.master_addr = master.ip
         elev.run()
         states.master()
-        
+
 
     elif (state == 'backup'):
         elev = Elev(ELEV_MODE)
@@ -45,6 +45,16 @@ def main():
         elev.run()
         backup = Master(state, 39501)
         print "I'M A BACKUP"
+        states.backup()
+        backup.run()
+        elev.client = Client(backup.ip, 10001, backup)
+        elev.master_addr = backup.ip
+        worker.alive = False
+        worker.join()
+        elev.worker = network.Msg_receiver(elev.client, elev.client.connection)
+        elev.worker.setDaemon(True)
+        elev.worker.start()
+        states.master()
 
     #Run until it die, or master die
     #if (old_master dies):
@@ -58,11 +68,12 @@ def main():
         elev.run()
         running = True
         while running:
+            try:
+                pass
             except(KeyboardInterrupt):
                 running = False
                 elev.client.disconnect()
-            else:
-                pass
+
     #Run til it die, or master/backup die
     #if(elev die):
     #   do task_stack, become unavailable (door close after taskstack done)
