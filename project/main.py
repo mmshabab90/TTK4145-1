@@ -27,16 +27,17 @@ def main():
 
     if (state == 'master'):
         print "Initiating.."
-        master = Master(state, 39500)
+        master = Master()
         master.run()
         print "Ready to serve"
         print_thread = Thread(target = master.print_system)
         print_thread.setDaemon(True)
         print_thread.start()
         elev = Elev(ELEV_MODE)
+        elev.state = 'master'
         elev.master_addr = master.ip
         elev.run()
-        states.master()
+        states.master(elev)
 
     #Run until it die, or master die
     #if (old_master dies):
@@ -48,7 +49,7 @@ def main():
         elev = Elev(ELEV_MODE)
         elev.master_addr = master_addr[0]
         elev.run()
-        running = True
+        Running = True
         states.slave(elev)
         backup = Master()
         states.backup(elev)

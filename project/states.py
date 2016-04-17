@@ -3,7 +3,8 @@ import socket
 
 def master(elev):
     while (elev.state == 'master'):
-
+        try:
+            pass
     	except(KeyboardInterrupt):
             running = False
             listen_backup.close()
