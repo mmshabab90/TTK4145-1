@@ -13,6 +13,7 @@ class Elev(master.Master):
         self.task_stack = [0]
         self.current_floor = N_FLOORS
         self.master_addr = None
+        self.state = 'client'
 
     def run(self):
         self.alive = True

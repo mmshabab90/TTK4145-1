@@ -24,7 +24,7 @@ def backup():
 		except(socket.timeout):
 		#Change state to master
 			backup = False
-			master = true
+			master = True
 			listen_master.close()
 		except(KeyboardInterrupt):
 			backup = False
