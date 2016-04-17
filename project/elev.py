@@ -13,12 +13,14 @@ class Elev(master.Master):
         self.task_stack = [0]
         self.current_floor = N_FLOORS
         self.master_addr = None
-        self.state = 'client'
+        self.state = 'slave'
 
     def run(self):
         self.alive = True
         self.client = network.Client(self.master_addr, 10001, self)
         self.ip = network.get_ip()
+        self.backup_ip = None
+        self.client.send_msg('request_backup_ip', None, self.ip)
         self.worker = network.Msg_receiver(self.client, self.client.connection)
         self.worker.setDaemon(True)
         self.worker.start()

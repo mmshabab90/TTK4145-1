@@ -7,17 +7,19 @@ import elev
 import network
 
 class Master(object):
-    def __init__(self, state, broadcast_port):
+    def __init__(self):
         self.alive = True
         self.elevators = {}
         self.ip = network.get_ip()
+        self.backup_ip = None
         self.external_buttons = [False for floor in range(N_FLOORS)]
         self.lock = Lock()
-        self.broadcaster = Thread(target = self.broadcast, args=(state, broadcast_port),)
-        self.broadcaster.setDaemon(True)
-        self.broadcaster.start()
+
 
     def run(self):
+        self.broadcaster = Thread(target = self.broadcast)
+        self.broadcaster.setDaemon(True)
+        self.broadcaster.start()
         self.server = network.ThreadedTCPServer((self.ip,10001), network.ClientHandler)
         self.server.clients = {}
         self.server.master = self
@@ -76,12 +78,12 @@ class Master(object):
 
         return stops*STOP_TIME + distance*TIME_BETWEEN_FLOORS
 
-    def broadcast(self, state, port):
+    def broadcast(self):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         while (self.alive):
-            sock.sendto(state, ('255.255.255.255', port))
+            sock.sendto('master', ('255.255.255.255', 39500))
             time.sleep(1)
 
     def run_server(self):
@@ -98,7 +100,7 @@ class Master(object):
 
     def print_system(self):
         while (True):
-            #system('clear')
+            system('clear')
             print "External buttons pressed:"
             print self.external_buttons
             for elev in self.elevators.values():
@@ -108,3 +110,8 @@ class Master(object):
                     print task, " ",
                 print "\n-------------------"
             time.sleep(0.5)
+
+    def send_backup_ip(self):
+        for elev in self.elevators:
+            self.server.clients[elev].send_msg('backup_ip', self.backup_ip)
+            

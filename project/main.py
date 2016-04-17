@@ -37,14 +37,6 @@ def main():
         elev.master_addr = master.ip
         elev.run()
         states.master()
-        
-
-    elif (state == 'backup'):
-        elev = Elev(ELEV_MODE)
-        elev.master_addr = master_addr[0]
-        elev.run()
-        backup = Master(state, 39501)
-        print "I'M A BACKUP"
 
     #Run until it die, or master die
     #if (old_master dies):
@@ -57,12 +49,12 @@ def main():
         elev.master_addr = master_addr[0]
         elev.run()
         running = True
-        while running:
-            except(KeyboardInterrupt):
-                running = False
-                elev.client.disconnect()
-            else:
-                pass
+        states.slave(elev)
+        backup = Master()
+        states.backup(elev)
+        backup.run()
+        states.master(elev)
+
     #Run til it die, or master/backup die
     #if(elev die):
     #   do task_stack, become unavailable (door close after taskstack done)

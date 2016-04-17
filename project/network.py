@@ -20,6 +20,12 @@ class ClientHandler(SocketServer.BaseRequestHandler):
         self.server.clients[self.ip] = self
         self.server.master.add_elevator(self.ip, ELEV_MODE)
         self.parser = Msg_parser(self.server.master, self)
+        if(not self.server.master.backup_ip and 
+            self.ip != self.server.master.ip):
+            #Convert slave to backup
+            self.server.master.backup_ip = self.ip
+            self.send_msg('convert_to_backup', None)
+            self.server.master.send_backup_ip()
 
     def handle(self):
         connected = True
@@ -63,6 +69,11 @@ class Client():
         received = json.loads(msg)
         if (received['type'] == 'queue_update'):
             self.elev.task_stack = received['data']
+        elif (received['type'] == 'convert_to_backup'):
+            self.elev.state = 'backup'
+        elif (received['type'] == 'backup_ip'):
+            self.elev.backup_ip = received['data']
+
 
     def disconnect(self):
         self.connection.close()
@@ -93,6 +104,7 @@ class Msg_parser():
             'external': self.parse_external,
             'queue_update': self.parse_queue_update,
             'floor_update': self.parse_floor_update,
+            'request_backup_ip': self.parse_request_backup,
         }
 
     def parse(self, data):
@@ -121,6 +133,9 @@ class Msg_parser():
     def parse_floor_update(self, data):
         self.master.elevators[data['ip']].current_floor = data['data']
         #notify backup
+
+    def parse_request_backup(self, data):
+        self.master.server.clients[data['ip']].send_msg('backup_ip', self.master.backup_ip)
 
 
 def get_ip():
