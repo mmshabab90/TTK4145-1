@@ -44,7 +44,8 @@ class ClientHandler(SocketServer.BaseRequestHandler):
 
     def send_msg(self, msg_type, data):
         msg = {'type':msg_type, 'data':data}
-        self.connection.sendall(json.dumps(msg))
+        with self.server.master.lock:
+            self.connection.sendall(json.dumps(msg))
 
 
 class Client():
@@ -96,7 +97,6 @@ class Msg_parser():
 
     def parse(self, data):
         data = json.loads(data)
-        #print data
         if data['type'] in self.possible_types:
             self.possible_types[data['type']](data)
         else:
@@ -109,14 +109,18 @@ class Msg_parser():
             self.master.elevators[ip].insert_task(data['data'])
             self.client_handler.server.clients[ip].send_msg('queue_update',
                                          self.master.elevators[ip].task_stack)
+        #notify backup
 
     def parse_queue_update(self, data):
         if (len(self.master.elevators[data['ip']].task_stack) > len(data['data'])):
             self.master.external_buttons[self.master.elevators[data['ip']].task_stack[0]] = False
+            #notify backup
         self.master.elevators[data['ip']].task_stack = data['data']
+        #Notify backup
 
     def parse_floor_update(self, data):
         self.master.elevators[data['ip']].current_floor = data['data']
+        #notify backup
 
 
 def get_ip():

@@ -12,6 +12,7 @@ class Master(object):
         self.elevators = {}
         self.ip = network.get_ip()
         self.external_buttons = [False for floor in range(N_FLOORS)]
+        self.lock = Lock()
         self.broadcaster = Thread(target = self.broadcast, args=(state, broadcast_port),)
         self.broadcaster.setDaemon(True)
         self.broadcaster.start()
