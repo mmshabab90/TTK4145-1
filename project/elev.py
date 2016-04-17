@@ -19,7 +19,7 @@ class Elev(master.Master):
         self.alive = True
         self.client = network.Client(self.master_addr, 10001, self)
         self.ip = network.get_ip()
-        self.backup_ip = None
+        self.backup_ip = ''
         self.backup = None
         self.client.send_msg('request_backup_ip', None, self.ip)
         self.worker = network.Msg_receiver(self.client, self.client.connection)
