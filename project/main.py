@@ -2,32 +2,28 @@ from elev import Elev
 from master import Master
 import network
 import socket
+import states
 
 from threading import Thread, Lock
 from constants import *
 
 def main():
-    m_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    m_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    m_sock.bind(('', 39500))
-    m_sock.settimeout(3)
+    m_sock = network.socket_setup(39500)
     try:
         msg, master_addr = m_sock.recvfrom(4096)
         #state = 'client'
-        b_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        b_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        b_sock.bind(('',39501))
-        b_sock.settimeout(3)
+        b_sock = network.socket_setup(39501)
         try:
             msg, backup_addr = b_sock.recvfrom(4096)
-            state = 'client'
+            state = 'slave'
         except (socket.timeout):
             state = 'backup'
         b_sock.close()
 
     except (socket.timeout):
         state = 'master'
-    m_sock.close()
+    if(state != 'backup'):
+        m_sock.close()
 
     if (state == 'master'):
         print "Initiating.."
@@ -40,12 +36,8 @@ def main():
         elev = Elev(ELEV_MODE)
         elev.master_addr = master.ip
         elev.run()
-        running = True
-        while running:
-
-            raw = raw_input()
-            if raw == "exit":
-                running = False
+        states.master()
+        
 
     elif (state == 'backup'):
         elev = Elev(ELEV_MODE)
@@ -53,23 +45,32 @@ def main():
         elev.run()
         backup = Master(state, 39501)
         print "I'M A BACKUP"
-        running = True
 
-        while running:
-            raw = raw_input()
-            if raw == "exit":
-                running = False
+    #Run until it die, or master die
+    #if (old_master dies):
+    #   old_backup -> new_master
+    #   new_master setup one new backup on one arbitrary elev
+    #As new master need to notify one elev to become new backup
+
     else:
         elev = Elev(ELEV_MODE)
         elev.master_addr = master_addr[0]
         elev.run()
         running = True
         while running:
-            raw = raw_input()
-            if raw == "exit":
+            except(KeyboardInterrupt):
                 running = False
                 elev.client.disconnect()
             else:
                 pass
+    #Run til it die, or master/backup die
+    #if(elev die):
+    #   do task_stack, become unavailable (door close after taskstack done)
+    #if(master die):
+    #   setup new client to new master/server
+    #   listen for command setup backup(from master)
+    #if(back_up die):
+    #   listen for command setup backup(from master)
+
 if __name__ == "__main__":
     main()

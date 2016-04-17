@@ -1,6 +1,6 @@
 import socket
 import time
-from threading import Thread
+from threading import Thread, Lock
 from os import system
 from constants import *
 import elev
@@ -98,7 +98,7 @@ class Master(object):
 
     def print_system(self):
         while (True):
-            system('clear')
+            #system('clear')
             print "External buttons pressed:"
             print self.external_buttons
             for elev in self.elevators.values():
