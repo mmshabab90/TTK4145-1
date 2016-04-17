@@ -6,8 +6,6 @@ import socket
 from threading import Thread, Lock
 from constants import *
 
-
-
 def main():
     m_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     m_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -44,6 +42,7 @@ def main():
         elev.run()
         running = True
         while running:
+
             raw = raw_input()
             if raw == "exit":
                 running = False
@@ -55,6 +54,7 @@ def main():
         backup = Master(state, 39501)
         print "I'M A BACKUP"
         running = True
+
         while running:
             raw = raw_input()
             if raw == "exit":

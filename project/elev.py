@@ -40,9 +40,7 @@ class Elev(master.Master):
     def insert_task(self, floor):
         next_dir = self.next_dir()
         if (next_dir == DIRN_STOP):
-            self.lock.acquire(True)
             self.task_stack.append(floor)
-            self.lock.release()
         elif ((self.current_floor < floor and next_dir == DIRN_UP) or
             (self.current_floor <= floor and next_dir == DIRN_DOWN)):
             for task in self.task_stack:
@@ -95,13 +93,10 @@ class Elev(master.Master):
                 self.elev.elev_set_door_open_lamp(1)
                 time.sleep(3)
                 self.elev.elev_set_door_open_lamp(0)
-                self.lock.acquire(True)
                 self.task_stack.pop(0)
-                self.lock.release()
                 self.client.send_msg('queue_update',
                                      self.task_stack,
                                      self.ip)
-                master.Master.print_task_stack(self)
 
     def button_handler(self):
         print "Start button handler"

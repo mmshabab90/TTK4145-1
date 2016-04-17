@@ -68,7 +68,8 @@ class Client():
 
     def send_msg(self, msg_type, data, ip):
         msg = {'type':msg_type, 'data':data, 'ip':ip}
-        self.connection.sendall(json.dumps(msg))
+        with self.elev.lock:
+            self.connection.sendall(json.dumps(msg))
 
 class Msg_receiver(Thread):
     def __init__(self, client, connection):
