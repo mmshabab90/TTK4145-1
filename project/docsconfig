@@ -1,0 +1,21 @@
+[epydoc] # Epydoc section marker (required by ConfigParser)
+
+# Information about the project.
+name: Elevator project TTK4145
+url: https://github.com/sindrehan/TTK41454
+
+# The list of modules to document.  Modules can be named using
+# dotted names, module filenames, or package directory names.
+# This option may be repeated.
+# modules: sys, os.path, re
+# modules: my/project/driver.py
+modules: master.py, elev.py, main.py, states.py, network.py
+
+# Write html output to the directory "apidocs"
+output: pdf
+target: apidocs/
+
+# Include all automatically generated graphs.  These graphs are
+# generated using Graphviz dot.
+graph: all
+dotpath: /usr/bin/dot

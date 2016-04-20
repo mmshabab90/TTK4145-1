@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>elev</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="https://github.com/sindrehan/TTK41454">Elevator project TTK4145</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        Module&nbsp;elev
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="elev-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="elev-module.html">Module elev</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno">  1</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">ctypes</tt> <tt class="py-keyword">import</tt> <tt class="py-op">*</tt> </tt>
+<a name="L2"></a><tt class="py-lineno">  2</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">constants</tt> <tt class="py-keyword">import</tt> <tt class="py-op">*</tt> </tt>
+<a name="L3"></a><tt class="py-lineno">  3</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">threading</tt> <tt class="py-keyword">import</tt> <tt class="py-name">Thread</tt><tt class="py-op">,</tt> <tt class="py-name">Lock</tt> </tt>
+<a name="L4"></a><tt class="py-lineno">  4</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt id="link-0" class="py-name" targets="Module network=network-module.html"><a title="network" class="py-name" href="#" onclick="return doclink('link-0', 'network', 'link-0');">network</a></tt> </tt>
+<a name="L5"></a><tt class="py-lineno">  5</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt id="link-1" class="py-name" targets="Module master=master-module.html,Function states.master()=states-module.html#master"><a title="master
+states.master" class="py-name" href="#" onclick="return doclink('link-1', 'master', 'link-1');">master</a></tt> </tt>
+<a name="L6"></a><tt class="py-lineno">  6</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">time</tt> </tt>
+<a name="L7"></a><tt class="py-lineno">  7</tt>  <tt class="py-line"> </tt>
+<a name="Elev"></a><div id="Elev-def"><a name="L8"></a><tt class="py-lineno">  8</tt> <a class="py-toggle" href="#" id="Elev-toggle" onclick="return toggle('Elev');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="elev.Elev-class.html">Elev</a><tt class="py-op">(</tt><tt class="py-base-class">master</tt><tt class="py-op">.</tt><tt class="py-base-class">Master</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Elev-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="Elev-expanded"><a name="Elev.__init__"></a><div id="Elev.__init__-def"><a name="L9"></a><tt class="py-lineno">  9</tt> <a class="py-toggle" href="#" id="Elev.__init__-toggle" onclick="return toggle('Elev.__init__');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="elev.Elev-class.html#__init__">__init__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">mode</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Elev.__init__-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="Elev.__init__-expanded"><a name="L10"></a><tt class="py-lineno"> 10</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">alive</tt> <tt class="py-op">=</tt> <tt class="py-name">False</tt> </tt>
+<a name="L11"></a><tt class="py-lineno"> 11</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">lock</tt> <tt class="py-op">=</tt> <tt class="py-name">Lock</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L12"></a><tt class="py-lineno"> 12</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">mode</tt> <tt class="py-op">=</tt> <tt class="py-name">mode</tt> </tt>
+<a name="L13"></a><tt class="py-lineno"> 13</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">task_stack</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt> </tt>
+<a name="L14"></a><tt class="py-lineno"> 14</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">current_floor</tt> <tt class="py-op">=</tt> <tt id="link-2" class="py-name" targets="Variable elev.N_FLOORS=elev-module.html#N_FLOORS,Variable main.N_FLOORS=main-module.html#N_FLOORS,Variable network.N_FLOORS=network-module.html#N_FLOORS"><a title="elev.N_FLOORS
+main.N_FLOORS
+network.N_FLOORS" class="py-name" href="#" onclick="return doclink('link-2', 'N_FLOORS', 'link-2');">N_FLOORS</a></tt> </tt>
+<a name="L15"></a><tt class="py-lineno"> 15</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">master_addr</tt> <tt class="py-op">=</tt> <tt class="py-name">None</tt> </tt>
+<a name="L16"></a><tt class="py-lineno"> 16</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">state</tt> <tt class="py-op">=</tt> <tt class="py-string">'slave'</tt> </tt>
+</div><a name="L17"></a><tt class="py-lineno"> 17</tt>  <tt class="py-line"> </tt>
+<a name="Elev.run"></a><div id="Elev.run-def"><a name="L18"></a><tt class="py-lineno"> 18</tt> <a class="py-toggle" href="#" id="Elev.run-toggle" onclick="return toggle('Elev.run');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="elev.Elev-class.html#run">run</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Elev.run-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="Elev.run-expanded"><a name="L19"></a><tt class="py-lineno"> 19</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">alive</tt> <tt class="py-op">=</tt> <tt class="py-name">True</tt> </tt>
+<a name="L20"></a><tt class="py-lineno"> 20</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">client</tt> <tt class="py-op">=</tt> <tt id="link-3" class="py-name"><a title="network" class="py-name" href="#" onclick="return doclink('link-3', 'network', 'link-0');">network</a></tt><tt class="py-op">.</tt><tt id="link-4" class="py-name" targets="Class network.Client=network.Client-class.html"><a title="network.Client" class="py-name" href="#" onclick="return doclink('link-4', 'Client', 'link-4');">Client</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">master_addr</tt><tt class="py-op">,</tt> <tt class="py-number">10001</tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">)</tt> </tt>
+<a name="L21"></a><tt class="py-lineno"> 21</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">ip</tt> <tt class="py-op">=</tt> <tt id="link-5" class="py-name"><a title="network" class="py-name" href="#" onclick="return doclink('link-5', 'network', 'link-0');">network</a></tt><tt class="py-op">.</tt><tt id="link-6" class="py-name" targets="Function network.get_ip()=network-module.html#get_ip"><a title="network.get_ip" class="py-name" href="#" onclick="return doclink('link-6', 'get_ip', 'link-6');">get_ip</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L22"></a><tt class="py-lineno"> 22</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">backup_ip</tt> <tt class="py-op">=</tt> <tt class="py-string">''</tt> </tt>
+<a name="L23"></a><tt class="py-lineno"> 23</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-7" class="py-name" targets="Function states.backup()=states-module.html#backup"><a title="states.backup" class="py-name" href="#" onclick="return doclink('link-7', 'backup', 'link-7');">backup</a></tt> <tt class="py-op">=</tt> <tt class="py-name">None</tt> </tt>
+<a name="L24"></a><tt class="py-lineno"> 24</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">client</tt><tt class="py-op">.</tt><tt id="link-8" class="py-name" targets="Method network.Client.send_msg()=network.Client-class.html#send_msg,Method network.ClientHandler.send_msg()=network.ClientHandler-class.html#send_msg"><a title="network.Client.send_msg
+network.ClientHandler.send_msg" class="py-name" href="#" onclick="return doclink('link-8', 'send_msg', 'link-8');">send_msg</a></tt><tt class="py-op">(</tt><tt class="py-string">'request_backup_ip'</tt><tt class="py-op">,</tt> <tt class="py-name">None</tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">ip</tt><tt class="py-op">)</tt> </tt>
+<a name="L25"></a><tt class="py-lineno"> 25</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">worker</tt> <tt class="py-op">=</tt> <tt id="link-9" class="py-name"><a title="network" class="py-name" href="#" onclick="return doclink('link-9', 'network', 'link-0');">network</a></tt><tt class="py-op">.</tt><tt id="link-10" class="py-name" targets="Class network.Msg_receiver=network.Msg_receiver-class.html"><a title="network.Msg_receiver" class="py-name" href="#" onclick="return doclink('link-10', 'Msg_receiver', 'link-10');">Msg_receiver</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">client</tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">client</tt><tt class="py-op">.</tt><tt class="py-name">connection</tt><tt class="py-op">)</tt> </tt>
+<a name="L26"></a><tt class="py-lineno"> 26</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">worker</tt><tt class="py-op">.</tt><tt class="py-name">setDaemon</tt><tt class="py-op">(</tt><tt class="py-name">True</tt><tt class="py-op">)</tt> </tt>
+<a name="L27"></a><tt class="py-lineno"> 27</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">worker</tt><tt class="py-op">.</tt><tt class="py-name">start</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L28"></a><tt class="py-lineno"> 28</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-11" class="py-name" targets="Module elev=elev-module.html"><a title="elev" class="py-name" href="#" onclick="return doclink('link-11', 'elev', 'link-11');">elev</a></tt> <tt class="py-op">=</tt> <tt class="py-name">cdll</tt><tt class="py-op">.</tt><tt class="py-name">LoadLibrary</tt><tt class="py-op">(</tt><tt class="py-string">"../driver/driver.so"</tt><tt class="py-op">)</tt> </tt>
+<a name="L29"></a><tt class="py-lineno"> 29</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-12" class="py-name"><a title="elev" class="py-name" href="#" onclick="return doclink('link-12', 'elev', 'link-11');">elev</a></tt><tt class="py-op">.</tt><tt class="py-name">elev_init</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">mode</tt><tt class="py-op">)</tt> </tt>
+<a name="L30"></a><tt class="py-lineno"> 30</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">movement</tt> <tt class="py-op">=</tt> <tt class="py-name">Thread</tt><tt class="py-op">(</tt><tt class="py-name">target</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-13" class="py-name" targets="Method elev.Elev.movement_handler()=elev.Elev-class.html#movement_handler"><a title="elev.Elev.movement_handler" class="py-name" href="#" onclick="return doclink('link-13', 'movement_handler', 'link-13');">movement_handler</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L31"></a><tt class="py-lineno"> 31</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">buttons</tt> <tt class="py-op">=</tt> <tt class="py-name">Thread</tt><tt class="py-op">(</tt><tt class="py-name">target</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-14" class="py-name" targets="Method elev.Elev.button_handler()=elev.Elev-class.html#button_handler"><a title="elev.Elev.button_handler" class="py-name" href="#" onclick="return doclink('link-14', 'button_handler', 'link-14');">button_handler</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L32"></a><tt class="py-lineno"> 32</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">movement</tt><tt class="py-op">.</tt><tt class="py-name">setDaemon</tt><tt class="py-op">(</tt><tt class="py-name">True</tt><tt class="py-op">)</tt> </tt>
+<a name="L33"></a><tt class="py-lineno"> 33</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">buttons</tt><tt class="py-op">.</tt><tt class="py-name">setDaemon</tt><tt class="py-op">(</tt><tt class="py-name">True</tt><tt class="py-op">)</tt> </tt>
+<a name="L34"></a><tt class="py-lineno"> 34</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">movement</tt><tt class="py-op">.</tt><tt class="py-name">start</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L35"></a><tt class="py-lineno"> 35</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">buttons</tt><tt class="py-op">.</tt><tt class="py-name">start</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L36"></a><tt class="py-lineno"> 36</tt>  <tt class="py-line"> </tt>
+<a name="Elev.__exit__"></a><div id="Elev.__exit__-def"><a name="L37"></a><tt class="py-lineno"> 37</tt> <a class="py-toggle" href="#" id="Elev.__exit__-toggle" onclick="return toggle('Elev.__exit__');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="elev.Elev-class.html#__exit__">__exit__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Elev.__exit__-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="Elev.__exit__-expanded"><a name="L38"></a><tt class="py-lineno"> 38</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">alive</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L39"></a><tt class="py-lineno"> 39</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">alive</tt> <tt class="py-op">=</tt> <tt class="py-name">False</tt> </tt>
+<a name="L40"></a><tt class="py-lineno"> 40</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">movement</tt><tt class="py-op">.</tt><tt class="py-name">join</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L41"></a><tt class="py-lineno"> 41</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">buttons</tt><tt class="py-op">.</tt><tt class="py-name">join</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L42"></a><tt class="py-lineno"> 42</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">worker</tt><tt class="py-op">.</tt><tt class="py-name">join</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L43"></a><tt class="py-lineno"> 43</tt>  <tt class="py-line"> </tt>
+<a name="Elev.insert_task"></a><div id="Elev.insert_task-def"><a name="L44"></a><tt class="py-lineno"> 44</tt> <a class="py-toggle" href="#" id="Elev.insert_task-toggle" onclick="return toggle('Elev.insert_task');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="elev.Elev-class.html#insert_task">insert_task</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">floor</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Elev.insert_task-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="Elev.insert_task-expanded"><a name="L45"></a><tt class="py-lineno"> 45</tt>  <tt class="py-line">        <tt id="link-15" class="py-name" targets="Method elev.Elev.next_dir()=elev.Elev-class.html#next_dir"><a title="elev.Elev.next_dir" class="py-name" href="#" onclick="return doclink('link-15', 'next_dir', 'link-15');">next_dir</a></tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-16" class="py-name"><a title="elev.Elev.next_dir" class="py-name" href="#" onclick="return doclink('link-16', 'next_dir', 'link-15');">next_dir</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L46"></a><tt class="py-lineno"> 46</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-op">(</tt><tt id="link-17" class="py-name"><a title="elev.Elev.next_dir" class="py-name" href="#" onclick="return doclink('link-17', 'next_dir', 'link-15');">next_dir</a></tt> <tt class="py-op">==</tt> <tt id="link-18" class="py-name" targets="Variable elev.DIRN_STOP=elev-module.html#DIRN_STOP,Variable main.DIRN_STOP=main-module.html#DIRN_STOP,Variable network.DIRN_STOP=network-module.html#DIRN_STOP"><a title="elev.DIRN_STOP
+main.DIRN_STOP
+network.DIRN_STOP" class="py-name" href="#" onclick="return doclink('link-18', 'DIRN_STOP', 'link-18');">DIRN_STOP</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L47"></a><tt class="py-lineno"> 47</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">task_stack</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-name">floor</tt><tt class="py-op">)</tt> </tt>
+<a name="L48"></a><tt class="py-lineno"> 48</tt>  <tt class="py-line">        <tt class="py-keyword">elif</tt> <tt class="py-op">(</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">current_floor</tt> <tt class="py-op">&lt;</tt> <tt class="py-name">floor</tt> <tt class="py-keyword">and</tt> <tt id="link-19" class="py-name"><a title="elev.Elev.next_dir" class="py-name" href="#" onclick="return doclink('link-19', 'next_dir', 'link-15');">next_dir</a></tt> <tt class="py-op">==</tt> <tt id="link-20" class="py-name" targets="Variable elev.DIRN_UP=elev-module.html#DIRN_UP,Variable main.DIRN_UP=main-module.html#DIRN_UP,Variable network.DIRN_UP=network-module.html#DIRN_UP"><a title="elev.DIRN_UP
+main.DIRN_UP
+network.DIRN_UP" class="py-name" href="#" onclick="return doclink('link-20', 'DIRN_UP', 'link-20');">DIRN_UP</a></tt><tt class="py-op">)</tt> <tt class="py-keyword">or</tt> </tt>
+<a name="L49"></a><tt class="py-lineno"> 49</tt>  <tt class="py-line">            <tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">current_floor</tt> <tt class="py-op">&lt;=</tt> <tt class="py-name">floor</tt> <tt class="py-keyword">and</tt> <tt id="link-21" class="py-name"><a title="elev.Elev.next_dir" class="py-name" href="#" onclick="return doclink('link-21', 'next_dir', 'link-15');">next_dir</a></tt> <tt class="py-op">==</tt> <tt id="link-22" class="py-name" targets="Variable elev.DIRN_DOWN=elev-module.html#DIRN_DOWN,Variable main.DIRN_DOWN=main-module.html#DIRN_DOWN,Variable network.DIRN_DOWN=network-module.html#DIRN_DOWN"><a title="elev.DIRN_DOWN
+main.DIRN_DOWN
+network.DIRN_DOWN" class="py-name" href="#" onclick="return doclink('link-22', 'DIRN_DOWN', 'link-22');">DIRN_DOWN</a></tt><tt class="py-op">)</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L50"></a><tt class="py-lineno"> 50</tt>  <tt class="py-line">            <tt class="py-keyword">for</tt> <tt class="py-name">task</tt> <tt class="py-keyword">in</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">task_stack</tt><tt class="py-op">:</tt> </tt>
+<a name="L51"></a><tt class="py-lineno"> 51</tt>  <tt class="py-line">                <tt class="py-keyword">if</tt> <tt class="py-op">(</tt><tt class="py-name">floor</tt> <tt class="py-op">&lt;</tt> <tt class="py-name">task</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L52"></a><tt class="py-lineno"> 52</tt>  <tt class="py-line">                    <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">lock</tt><tt class="py-op">.</tt><tt class="py-name">acquire</tt><tt class="py-op">(</tt><tt class="py-name">True</tt><tt class="py-op">)</tt> </tt>
+<a name="L53"></a><tt class="py-lineno"> 53</tt>  <tt class="py-line">                    <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">task_stack</tt><tt class="py-op">.</tt><tt class="py-name">insert</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">task_stack</tt><tt class="py-op">.</tt><tt class="py-name">index</tt><tt class="py-op">(</tt><tt class="py-name">task</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">floor</tt><tt class="py-op">)</tt> </tt>
+<a name="L54"></a><tt class="py-lineno"> 54</tt>  <tt class="py-line">                    <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">lock</tt><tt class="py-op">.</tt><tt class="py-name">release</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L55"></a><tt class="py-lineno"> 55</tt>  <tt class="py-line">                    <tt class="py-keyword">return</tt> </tt>
+<a name="L56"></a><tt class="py-lineno"> 56</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">task_stack</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-name">floor</tt><tt class="py-op">)</tt> </tt>
+<a name="L57"></a><tt class="py-lineno"> 57</tt>  <tt class="py-line">        <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L58"></a><tt class="py-lineno"> 58</tt>  <tt class="py-line">            <tt class="py-keyword">for</tt> <tt class="py-name">task</tt> <tt class="py-keyword">in</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">task_stack</tt><tt class="py-op">:</tt> </tt>
+<a name="L59"></a><tt class="py-lineno"> 59</tt>  <tt class="py-line">                <tt class="py-keyword">if</tt> <tt class="py-op">(</tt><tt class="py-name">floor</tt> <tt class="py-op">&gt;</tt> <tt class="py-name">task</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L60"></a><tt class="py-lineno"> 60</tt>  <tt class="py-line">                    <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">lock</tt><tt class="py-op">.</tt><tt class="py-name">acquire</tt><tt class="py-op">(</tt><tt class="py-name">True</tt><tt class="py-op">)</tt> </tt>
+<a name="L61"></a><tt class="py-lineno"> 61</tt>  <tt class="py-line">                    <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">task_stack</tt><tt class="py-op">.</tt><tt class="py-name">insert</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">task_stack</tt><tt class="py-op">.</tt><tt class="py-name">index</tt><tt class="py-op">(</tt><tt class="py-name">task</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">floor</tt><tt class="py-op">)</tt> </tt>
+<a name="L62"></a><tt class="py-lineno"> 62</tt>  <tt class="py-line">                    <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">lock</tt><tt class="py-op">.</tt><tt class="py-name">release</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L63"></a><tt class="py-lineno"> 63</tt>  <tt class="py-line">                    <tt class="py-keyword">return</tt> </tt>
+<a name="L64"></a><tt class="py-lineno"> 64</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">task_stack</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-name">floor</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L65"></a><tt class="py-lineno"> 65</tt>  <tt class="py-line"> </tt>
+<a name="Elev.next_dir"></a><div id="Elev.next_dir-def"><a name="L66"></a><tt class="py-lineno"> 66</tt> <a class="py-toggle" href="#" id="Elev.next_dir-toggle" onclick="return toggle('Elev.next_dir');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="elev.Elev-class.html#next_dir">next_dir</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Elev.next_dir-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="Elev.next_dir-expanded"><a name="L67"></a><tt class="py-lineno"> 67</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">task_stack</tt> <tt class="py-op">!=</tt> <tt class="py-op">[</tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L68"></a><tt class="py-lineno"> 68</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">current_floor</tt> <tt class="py-op">&lt;</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">task_stack</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L69"></a><tt class="py-lineno"> 69</tt>  <tt class="py-line">                <tt class="py-keyword">return</tt> <tt id="link-23" class="py-name"><a title="elev.DIRN_UP
+main.DIRN_UP
+network.DIRN_UP" class="py-name" href="#" onclick="return doclink('link-23', 'DIRN_UP', 'link-20');">DIRN_UP</a></tt> </tt>
+<a name="L70"></a><tt class="py-lineno"> 70</tt>  <tt class="py-line">            <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L71"></a><tt class="py-lineno"> 71</tt>  <tt class="py-line">                <tt class="py-keyword">return</tt> <tt id="link-24" class="py-name"><a title="elev.DIRN_DOWN
+main.DIRN_DOWN
+network.DIRN_DOWN" class="py-name" href="#" onclick="return doclink('link-24', 'DIRN_DOWN', 'link-22');">DIRN_DOWN</a></tt> </tt>
+<a name="L72"></a><tt class="py-lineno"> 72</tt>  <tt class="py-line">        <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L73"></a><tt class="py-lineno"> 73</tt>  <tt class="py-line">            <tt class="py-keyword">return</tt> <tt id="link-25" class="py-name"><a title="elev.DIRN_STOP
+main.DIRN_STOP
+network.DIRN_STOP" class="py-name" href="#" onclick="return doclink('link-25', 'DIRN_STOP', 'link-18');">DIRN_STOP</a></tt> </tt>
+</div><a name="L74"></a><tt class="py-lineno"> 74</tt>  <tt class="py-line"> </tt>
+<a name="Elev.movement_handler"></a><div id="Elev.movement_handler-def"><a name="L75"></a><tt class="py-lineno"> 75</tt> <a class="py-toggle" href="#" id="Elev.movement_handler-toggle" onclick="return toggle('Elev.movement_handler');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="elev.Elev-class.html#movement_handler">movement_handler</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Elev.movement_handler-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="Elev.movement_handler-expanded"><a name="L76"></a><tt class="py-lineno"> 76</tt>  <tt class="py-line">        <tt class="py-keyword">print</tt> <tt class="py-string">"start move handler"</tt> </tt>
+<a name="L77"></a><tt class="py-lineno"> 77</tt>  <tt class="py-line">        <tt class="py-keyword">while</tt> <tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">alive</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L78"></a><tt class="py-lineno"> 78</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">task_stack</tt> <tt class="py-op">!=</tt> <tt class="py-op">[</tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L79"></a><tt class="py-lineno"> 79</tt>  <tt class="py-line">                <tt class="py-name">direction_set</tt> <tt class="py-op">=</tt> <tt class="py-number">0</tt> </tt>
+<a name="L80"></a><tt class="py-lineno"> 80</tt>  <tt class="py-line">                <tt class="py-keyword">while</tt> <tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">current_floor</tt> <tt class="py-op">!=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">task_stack</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L81"></a><tt class="py-lineno"> 81</tt>  <tt class="py-line">                    <tt class="py-keyword">if</tt> <tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">task_stack</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt> <tt class="py-op">&gt;</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">current_floor</tt> <tt class="py-keyword">and</tt> <tt class="py-keyword">not</tt> <tt class="py-name">direction_set</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L82"></a><tt class="py-lineno"> 82</tt>  <tt class="py-line">                        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-26" class="py-name"><a title="elev" class="py-name" href="#" onclick="return doclink('link-26', 'elev', 'link-11');">elev</a></tt><tt class="py-op">.</tt><tt class="py-name">elev_set_motor_direction</tt><tt class="py-op">(</tt><tt id="link-27" class="py-name"><a title="elev.DIRN_UP
+main.DIRN_UP
+network.DIRN_UP" class="py-name" href="#" onclick="return doclink('link-27', 'DIRN_UP', 'link-20');">DIRN_UP</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L83"></a><tt class="py-lineno"> 83</tt>  <tt class="py-line">                        <tt class="py-name">direction_set</tt> <tt class="py-op">=</tt> <tt class="py-number">1</tt> </tt>
+<a name="L84"></a><tt class="py-lineno"> 84</tt>  <tt class="py-line">                    <tt class="py-keyword">elif</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">task_stack</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt> <tt class="py-op">&lt;</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">current_floor</tt> <tt class="py-keyword">and</tt> <tt class="py-keyword">not</tt> <tt class="py-name">direction_set</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L85"></a><tt class="py-lineno"> 85</tt>  <tt class="py-line">                        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-28" class="py-name"><a title="elev" class="py-name" href="#" onclick="return doclink('link-28', 'elev', 'link-11');">elev</a></tt><tt class="py-op">.</tt><tt class="py-name">elev_set_motor_direction</tt><tt class="py-op">(</tt><tt id="link-29" class="py-name"><a title="elev.DIRN_DOWN
+main.DIRN_DOWN
+network.DIRN_DOWN" class="py-name" href="#" onclick="return doclink('link-29', 'DIRN_DOWN', 'link-22');">DIRN_DOWN</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L86"></a><tt class="py-lineno"> 86</tt>  <tt class="py-line">                        <tt class="py-name">direction_set</tt> <tt class="py-op">=</tt> <tt class="py-number">1</tt> </tt>
+<a name="L87"></a><tt class="py-lineno"> 87</tt>  <tt class="py-line">                    <tt class="py-name">floor_sensor</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-30" class="py-name"><a title="elev" class="py-name" href="#" onclick="return doclink('link-30', 'elev', 'link-11');">elev</a></tt><tt class="py-op">.</tt><tt class="py-name">elev_get_floor_sensor_signal</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L88"></a><tt class="py-lineno"> 88</tt>  <tt class="py-line">                    <tt class="py-keyword">if</tt> <tt class="py-op">(</tt><tt class="py-name">floor_sensor</tt> <tt class="py-op">!=</tt> <tt class="py-op">-</tt><tt class="py-number">1</tt> <tt class="py-keyword">and</tt> <tt class="py-name">floor_sensor</tt> <tt class="py-op">!=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">current_floor</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L89"></a><tt class="py-lineno"> 89</tt>  <tt class="py-line">                        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">current_floor</tt> <tt class="py-op">=</tt> <tt class="py-name">floor_sensor</tt> </tt>
+<a name="L90"></a><tt class="py-lineno"> 90</tt>  <tt class="py-line">                        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-31" class="py-name"><a title="elev" class="py-name" href="#" onclick="return doclink('link-31', 'elev', 'link-11');">elev</a></tt><tt class="py-op">.</tt><tt class="py-name">elev_set_floor_indicator</tt><tt class="py-op">(</tt><tt class="py-name">floor_sensor</tt><tt class="py-op">)</tt> </tt>
+<a name="L91"></a><tt class="py-lineno"> 91</tt>  <tt class="py-line">                        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">client</tt><tt class="py-op">.</tt><tt id="link-32" class="py-name"><a title="network.Client.send_msg
+network.ClientHandler.send_msg" class="py-name" href="#" onclick="return doclink('link-32', 'send_msg', 'link-8');">send_msg</a></tt><tt class="py-op">(</tt><tt class="py-string">'floor_update'</tt><tt class="py-op">,</tt> </tt>
+<a name="L92"></a><tt class="py-lineno"> 92</tt>  <tt class="py-line">                                             <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">current_floor</tt><tt class="py-op">,</tt> </tt>
+<a name="L93"></a><tt class="py-lineno"> 93</tt>  <tt class="py-line">                                             <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">ip</tt><tt class="py-op">)</tt> </tt>
+<a name="L94"></a><tt class="py-lineno"> 94</tt>  <tt class="py-line">                <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-33" class="py-name"><a title="elev" class="py-name" href="#" onclick="return doclink('link-33', 'elev', 'link-11');">elev</a></tt><tt class="py-op">.</tt><tt class="py-name">elev_set_motor_direction</tt><tt class="py-op">(</tt><tt id="link-34" class="py-name"><a title="elev.DIRN_STOP
+main.DIRN_STOP
+network.DIRN_STOP" class="py-name" href="#" onclick="return doclink('link-34', 'DIRN_STOP', 'link-18');">DIRN_STOP</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L95"></a><tt class="py-lineno"> 95</tt>  <tt class="py-line">                <tt class="py-name">direction_set</tt> <tt class="py-op">=</tt> <tt class="py-number">0</tt> </tt>
+<a name="L96"></a><tt class="py-lineno"> 96</tt>  <tt class="py-line">                <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-35" class="py-name"><a title="elev" class="py-name" href="#" onclick="return doclink('link-35', 'elev', 'link-11');">elev</a></tt><tt class="py-op">.</tt><tt class="py-name">elev_set_button_lamp</tt><tt class="py-op">(</tt><tt id="link-36" class="py-name" targets="Variable elev.BUTTON_COMMAND=elev-module.html#BUTTON_COMMAND,Variable main.BUTTON_COMMAND=main-module.html#BUTTON_COMMAND,Variable network.BUTTON_COMMAND=network-module.html#BUTTON_COMMAND"><a title="elev.BUTTON_COMMAND
+main.BUTTON_COMMAND
+network.BUTTON_COMMAND" class="py-name" href="#" onclick="return doclink('link-36', 'BUTTON_COMMAND', 'link-36');">BUTTON_COMMAND</a></tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">task_stack</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt><tt class="py-op">,</tt> <tt class="py-number">0</tt><tt class="py-op">)</tt> </tt>
+<a name="L97"></a><tt class="py-lineno"> 97</tt>  <tt class="py-line">                <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-37" class="py-name"><a title="elev" class="py-name" href="#" onclick="return doclink('link-37', 'elev', 'link-11');">elev</a></tt><tt class="py-op">.</tt><tt class="py-name">elev_set_door_open_lamp</tt><tt class="py-op">(</tt><tt class="py-number">1</tt><tt class="py-op">)</tt> </tt>
+<a name="L98"></a><tt class="py-lineno"> 98</tt>  <tt class="py-line">                <tt class="py-name">time</tt><tt class="py-op">.</tt><tt class="py-name">sleep</tt><tt class="py-op">(</tt><tt class="py-number">3</tt><tt class="py-op">)</tt> </tt>
+<a name="L99"></a><tt class="py-lineno"> 99</tt>  <tt class="py-line">                <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-38" class="py-name"><a title="elev" class="py-name" href="#" onclick="return doclink('link-38', 'elev', 'link-11');">elev</a></tt><tt class="py-op">.</tt><tt class="py-name">elev_set_door_open_lamp</tt><tt class="py-op">(</tt><tt class="py-number">0</tt><tt class="py-op">)</tt> </tt>
+<a name="L100"></a><tt class="py-lineno">100</tt>  <tt class="py-line">                <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">task_stack</tt><tt class="py-op">.</tt><tt class="py-name">pop</tt><tt class="py-op">(</tt><tt class="py-number">0</tt><tt class="py-op">)</tt> </tt>
+<a name="L101"></a><tt class="py-lineno">101</tt>  <tt class="py-line">                <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">client</tt><tt class="py-op">.</tt><tt id="link-39" class="py-name"><a title="network.Client.send_msg
+network.ClientHandler.send_msg" class="py-name" href="#" onclick="return doclink('link-39', 'send_msg', 'link-8');">send_msg</a></tt><tt class="py-op">(</tt><tt class="py-string">'queue_update'</tt><tt class="py-op">,</tt> </tt>
+<a name="L102"></a><tt class="py-lineno">102</tt>  <tt class="py-line">                                     <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">task_stack</tt><tt class="py-op">,</tt> </tt>
+<a name="L103"></a><tt class="py-lineno">103</tt>  <tt class="py-line">                                     <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">ip</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L104"></a><tt class="py-lineno">104</tt>  <tt class="py-line"> </tt>
+<a name="Elev.button_handler"></a><div id="Elev.button_handler-def"><a name="L105"></a><tt class="py-lineno">105</tt> <a class="py-toggle" href="#" id="Elev.button_handler-toggle" onclick="return toggle('Elev.button_handler');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="elev.Elev-class.html#button_handler">button_handler</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Elev.button_handler-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="Elev.button_handler-expanded"><a name="L106"></a><tt class="py-lineno">106</tt>  <tt class="py-line">        <tt class="py-keyword">print</tt> <tt class="py-string">"Start button handler"</tt> </tt>
+<a name="L107"></a><tt class="py-lineno">107</tt>  <tt class="py-line">        <tt class="py-name">prev</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-op">[</tt><tt class="py-number">0</tt> <tt class="py-keyword">for</tt> <tt class="py-name">i</tt> <tt class="py-keyword">in</tt> <tt class="py-name">range</tt><tt class="py-op">(</tt><tt id="link-40" class="py-name" targets="Variable elev.N_BUTTONS=elev-module.html#N_BUTTONS,Variable main.N_BUTTONS=main-module.html#N_BUTTONS,Variable network.N_BUTTONS=network-module.html#N_BUTTONS"><a title="elev.N_BUTTONS
+main.N_BUTTONS
+network.N_BUTTONS" class="py-name" href="#" onclick="return doclink('link-40', 'N_BUTTONS', 'link-40');">N_BUTTONS</a></tt><tt class="py-op">)</tt><tt class="py-op">]</tt> <tt class="py-keyword">for</tt> <tt class="py-name">j</tt> <tt class="py-keyword">in</tt> <tt class="py-name">range</tt><tt class="py-op">(</tt><tt id="link-41" class="py-name"><a title="elev.N_FLOORS
+main.N_FLOORS
+network.N_FLOORS" class="py-name" href="#" onclick="return doclink('link-41', 'N_FLOORS', 'link-2');">N_FLOORS</a></tt><tt class="py-op">)</tt><tt class="py-op">]</tt> </tt>
+<a name="L108"></a><tt class="py-lineno">108</tt>  <tt class="py-line">        <tt class="py-keyword">while</tt> <tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">alive</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L109"></a><tt class="py-lineno">109</tt>  <tt class="py-line">            <tt class="py-keyword">for</tt> <tt class="py-name">floor</tt> <tt class="py-keyword">in</tt> <tt class="py-name">range</tt><tt class="py-op">(</tt><tt id="link-42" class="py-name"><a title="elev.N_FLOORS
+main.N_FLOORS
+network.N_FLOORS" class="py-name" href="#" onclick="return doclink('link-42', 'N_FLOORS', 'link-2');">N_FLOORS</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L110"></a><tt class="py-lineno">110</tt>  <tt class="py-line">                <tt class="py-keyword">for</tt> <tt class="py-name">button</tt> <tt class="py-keyword">in</tt> <tt class="py-name">range</tt><tt class="py-op">(</tt><tt id="link-43" class="py-name"><a title="elev.N_BUTTONS
+main.N_BUTTONS
+network.N_BUTTONS" class="py-name" href="#" onclick="return doclink('link-43', 'N_BUTTONS', 'link-40');">N_BUTTONS</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L111"></a><tt class="py-lineno">111</tt>  <tt class="py-line">                    <tt class="py-name">v</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-44" class="py-name"><a title="elev" class="py-name" href="#" onclick="return doclink('link-44', 'elev', 'link-11');">elev</a></tt><tt class="py-op">.</tt><tt class="py-name">elev_get_button_signal</tt><tt class="py-op">(</tt><tt class="py-name">button</tt><tt class="py-op">,</tt> <tt class="py-name">floor</tt><tt class="py-op">)</tt> </tt>
+<a name="L112"></a><tt class="py-lineno">112</tt>  <tt class="py-line">                    <tt class="py-keyword">if</tt> <tt class="py-op">(</tt><tt class="py-name">v</tt> <tt class="py-keyword">and</tt> <tt class="py-name">v</tt> <tt class="py-op">!=</tt> <tt class="py-name">prev</tt><tt class="py-op">[</tt><tt class="py-name">floor</tt><tt class="py-op">]</tt><tt class="py-op">[</tt><tt class="py-name">button</tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L113"></a><tt class="py-lineno">113</tt>  <tt class="py-line">                        <tt class="py-keyword">if</tt> <tt class="py-op">(</tt><tt class="py-name">button</tt> <tt class="py-op">==</tt> <tt id="link-45" class="py-name"><a title="elev.BUTTON_COMMAND
+main.BUTTON_COMMAND
+network.BUTTON_COMMAND" class="py-name" href="#" onclick="return doclink('link-45', 'BUTTON_COMMAND', 'link-36');">BUTTON_COMMAND</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L114"></a><tt class="py-lineno">114</tt>  <tt class="py-line">                            <tt class="py-keyword">if</tt> <tt class="py-op">(</tt><tt class="py-name">floor</tt> <tt class="py-keyword">not</tt> <tt class="py-keyword">in</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">task_stack</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L115"></a><tt class="py-lineno">115</tt>  <tt class="py-line">                                <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-46" class="py-name" targets="Method elev.Elev.insert_task()=elev.Elev-class.html#insert_task"><a title="elev.Elev.insert_task" class="py-name" href="#" onclick="return doclink('link-46', 'insert_task', 'link-46');">insert_task</a></tt><tt class="py-op">(</tt><tt class="py-name">floor</tt><tt class="py-op">)</tt> </tt>
+<a name="L116"></a><tt class="py-lineno">116</tt>  <tt class="py-line">                                <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">client</tt><tt class="py-op">.</tt><tt id="link-47" class="py-name"><a title="network.Client.send_msg
+network.ClientHandler.send_msg" class="py-name" href="#" onclick="return doclink('link-47', 'send_msg', 'link-8');">send_msg</a></tt><tt class="py-op">(</tt><tt class="py-string">'queue_update'</tt><tt class="py-op">,</tt> </tt>
+<a name="L117"></a><tt class="py-lineno">117</tt>  <tt class="py-line">                                                     <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">task_stack</tt><tt class="py-op">,</tt> </tt>
+<a name="L118"></a><tt class="py-lineno">118</tt>  <tt class="py-line">                                                     <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">ip</tt><tt class="py-op">)</tt> </tt>
+<a name="L119"></a><tt class="py-lineno">119</tt>  <tt class="py-line">                        <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L120"></a><tt class="py-lineno">120</tt>  <tt class="py-line">                            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">client</tt><tt class="py-op">.</tt><tt id="link-48" class="py-name"><a title="network.Client.send_msg
+network.ClientHandler.send_msg" class="py-name" href="#" onclick="return doclink('link-48', 'send_msg', 'link-8');">send_msg</a></tt><tt class="py-op">(</tt><tt class="py-string">'external'</tt><tt class="py-op">,</tt> <tt class="py-name">floor</tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">ip</tt><tt class="py-op">)</tt> </tt>
+<a name="L121"></a><tt class="py-lineno">121</tt>  <tt class="py-line">                    <tt class="py-name">prev</tt><tt class="py-op">[</tt><tt class="py-name">floor</tt><tt class="py-op">]</tt><tt class="py-op">[</tt><tt class="py-name">button</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">v</tt> </tt>
+</div></div><a name="L122"></a><tt class="py-lineno">122</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="https://github.com/sindrehan/TTK41454">Elevator project TTK4145</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Wed Apr 20 07:55:29 2016
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>
