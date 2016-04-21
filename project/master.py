@@ -2,7 +2,7 @@ import socket
 import time
 from threading import Thread, Lock
 from os import system
-from constants import *
+import constants
 import elev
 import network
 
@@ -12,7 +12,7 @@ class Master(object):
         self.elevators = {}
         self.ip = network.get_ip()
         self.backup_ip = ''
-        self.external_buttons = [False for floor in range(N_FLOORS)]
+        self.external_buttons = [False for floor in range(constants.N_FLOORS)]
         self.lock = Lock()
 
 
@@ -42,7 +42,7 @@ class Master(object):
                 return self.fastest_elev(floor)
 
     def closest_elev(self, floor):
-        min_dist = N_FLOORS
+        min_dist = constants.N_FLOORS
         for elev in self.elevators:
             dist = abs(self.elevators[elev].current_floor - floor)
             if (dist < min_dist):
@@ -51,7 +51,7 @@ class Master(object):
         return closest_elev
 
     def fastest_elev(self, floor):
-        shortest_time = 2*N_FLOORS*(STOP_TIME + TIME_BETWEEN_FLOORS)
+        shortest_time = 2*N_FLOORS*(constants.STOP_TIME + constants.TIME_BETWEEN_FLOORS)
         for elev in self.elevators:
             time = self.cal_time(elev, floor)
             if (time < shortest_time):
@@ -63,20 +63,20 @@ class Master(object):
         elev = self.elevators[elev_ip]
         stops = len(elev.task_stack)
 
-        if ((elev.next_dir() == DIRN_UP and floor > elev.current_floor) or
-            (elev.next_dir() == DIRN_DOWN and floor < elev.current_floor)):
+        if ((elev.next_dir() == constants.DIRN_UP and floor > elev.current_floor) or
+            (elev.next_dir() == constants.DIRN_DOWN and floor < elev.current_floor)):
             distance = abs(elev.current_floor - floor)
 
-        elif(elev.next_dir() == DIRN_UP and floor <= elev.current_floor):
+        elif(elev.next_dir() == constants.DIRN_UP and floor <= elev.current_floor):
             distance = 2*max(elev.task_stack) - elev.current_floor - floor
 
-        elif(elev.next_dir() == DIRN_DOWN and floor >= elev.current_floor):
+        elif(elev.next_dir() == constants.DIRN_DOWN and floor >= elev.current_floor):
             distance = elev.current_floor + floor
 
         else:
             distance = abs(elev.current_floor - floor)
 
-        return stops*STOP_TIME + distance*TIME_BETWEEN_FLOORS
+        return stops*constants.STOP_TIME + distance*constants.TIME_BETWEEN_FLOORS
 
     def broadcast(self):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -90,13 +90,6 @@ class Master(object):
         self.server.timeout = None
         while (True):
             self.server.handle_request()
-
-    def print_task_stack(elev):
-        system('clear')
-        print "-------------------"
-        for task in elev.task_stack:
-            print task, " ",
-        print "\n-------------------"
 
     def print_system(self):
         while (True):
@@ -115,4 +108,3 @@ class Master(object):
     def send_backup_ip(self):
         for elev in self.elevators:
             self.server.clients[elev].send_msg('backup_ip', self.backup_ip)
-            

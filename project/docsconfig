@@ -7,11 +7,9 @@ url: https://github.com/sindrehan/TTK41454
 # The list of modules to document.  Modules can be named using
 # dotted names, module filenames, or package directory names.
 # This option may be repeated.
-# modules: sys, os.path, re
-# modules: my/project/driver.py
-modules: master.py, elev.py, main.py, states.py, network.py
+modules: main.py, master.py, elev.py, states.py, network.py
 
-# Write html output to the directory "apidocs"
+# Write output to the directory "apidocs"
 output: pdf
 target: apidocs/
 

@@ -5,9 +5,9 @@ def master():
     while (True):
         try:
             pass
-    	except(KeyboardInterrupt):
+        except(KeyboardInterrupt):
             print "Ctrl+C: User ended process"
-            
+
 def backup(elev, backup):
         listen_master = network.socket_setup(39500)
         while elev.state == 'backup':
@@ -26,12 +26,8 @@ def backup(elev, backup):
                 listen_master.close()
 
 def slave(elev):
-	while (elev.state == 'slave'):
-		try:
-			pass
-		except(KeyboardInterrupt):
-			elev.alive = False
-			
-
-
-        
+        while (elev.state == 'slave'):
+                try:
+                        pass
+                except(KeyboardInterrupt):
+                        elev.alive = False

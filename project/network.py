@@ -4,9 +4,8 @@ import SocketServer
 import socket
 import json
 import time
-from constants import *
+import constants
 from threading import Thread
-from master import Master
 
 class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
     allow_reuse_address = True
@@ -18,11 +17,10 @@ class ClientHandler(SocketServer.BaseRequestHandler):
         self.port = self.client_address[1]
         self.connection = self.request
         self.server.clients[self.ip] = self
-        self.server.master.add_elevator(self.ip, ELEV_MODE)
+        self.server.master.add_elevator(self.ip, constants.ELEV_MODE)
         self.parser = Msg_parser(self.server.master, self)
-        if(not self.server.master.backup_ip and 
+        if(not self.server.master.backup_ip and
             self.ip != self.server.master.ip):
-            #Convert slave to backup
             self.server.master.backup_ip = self.ip
             self.send_msg('convert_to_backup', None)
             self.server.master.send_backup_ip()
@@ -93,8 +91,8 @@ class Client():
                 self.elev.worker = Msg_receiver(self.elev.client, self.elev.client.connection)
                 self.elev.worker.setDaemon(True)
                 self.worker.start()
-            
-            
+
+
 class Msg_receiver(Thread):
     def __init__(self, client, connection):
         super(Msg_receiver, self).__init__()
@@ -153,7 +151,7 @@ class Msg_parser():
         self.master.server.clients[data['ip']].send_msg('backup_ip',
                                                         self.master.backup_ip)
 
-    
+
 
 
 def get_ip():
@@ -169,6 +167,3 @@ def socket_setup(port):
     sock.bind(('', port))
     sock.settimeout(3)
     return sock
-
-
-

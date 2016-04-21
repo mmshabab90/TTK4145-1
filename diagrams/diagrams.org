@@ -2,15 +2,11 @@
 This file contains the source for the diagrams used in the documentation.
 #+begin_src plantuml :file master-client.png
 Node Master
-Node Backup
-Node Client1
-Node Client2
-Node Client3
+Node Client1 as "Backup"
+Node Client2 as "Slave"
 
-Master -right.. Backup
 Master -- Client1
 Master -- Client2
-Master -- Client3
 
 #+end_src
 
@@ -36,3 +32,51 @@ NewMaster -- Client3
 
 #+RESULTS:
 [[file:backup-client.png]]
+
+#+begin_src plantuml :file sequence_init.png
+actor a as "Admin"
+participant main
+control m as "master"
+entity c as "slave"
+
+a -> main: Run main.py
+activate main
+main -> main: Listen for master on network
+alt There is a master
+main -> c: Run as slave
+activate c
+
+else no master
+main -> m: Run as master
+activate m
+
+end
+
+
+#+end_src
+
+#+RESULTS:
+[[file:sequence_init.png]]
+
+
+#+begin_src plantuml :file activity_elevator.png
+start
+fork
+:Button handler;
+repeat
+  :hei;
+  if (Button pressed?) then (yes)
+    :HEi1;
+    repeat
+  else (no)
+    :Hallo;
+  endif
+repeat while(Button pressed?) is (no)
+fork again
+:Movement handler;
+fork again
+:Listen for messages;
+#+end_src
+
+#+RESULTS:
+[[file:activity_elevator.png]]

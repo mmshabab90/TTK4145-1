@@ -72,3 +72,10 @@ The master maintaines a timer for every elevator, that is reset every time an el
 
 ## Weaknesses
 - There's no polling between master and clients, so a disconnect will go unnoticed until either the server or the client tries to send a message. 
+- No robustness, other than slave disconnection, handled.
+
+Diagrams:
+- Node
+- sequence init
+- sequence message transmission
+- Class diagrams
