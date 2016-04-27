@@ -1,0 +1,87 @@
+#+OPTIONS: toc:nil
+#+TITLE: Exercise 9
+#+AUTHOR: Sindre Hansen
+
+* Task 1
+** Why do we assign priorities to tasks?
+   We assign priorities to establish a hierarchy of importance. Processes that pertain to the OS, kernel, etc should have a higher priority than user-generated processes.
+
+** What features must a scheduler have for it to be usable for real-time systems?
+   For a scheduler to be useful in analysis of the system it needs to be predictable.
+
+* Task 2
+** Without priority inheritance
+| Task | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 |
+|------+---+---+---+---+---+---+---+---+---+---+----+----+----+----+----|
+| a    |   |   |   |   | E |   |   |   |   |   |    | Q  | V  | E  |    |
+| b    |   |   | E | V |   | V | E | E | E |   |    |    |    |    |    |
+| c    | E | Q |   |   |   |   |   |   |   | Q | Q  |    |    |    | E  |
+
+** With priority inheritance
+| Task | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 |
+|------+---+---+---+---+---+---+---+---+---+---+----+----+----+----+----|
+| a    |   |   |   |   | E |   |   | Q |   | V |  E |    |    |    |    |
+| b    |   |   | E | V |   |   |   |   | V |   |    |  E |  E |  E |    |
+| c    | E | Q |   |   |   | Q | Q |   |   |   |    |    |    |    | E  |
+
+* Task 3
+** Priority inversion
+*** What is priority inversion?
+    If a high-priority task and a low-priority task shares the same resource, the high-priority task can end up waiting for the low-priority task, this is called priority inversion.
+*** What is unbounded priority inversion?
+    Unbounded priority inversion is when another task is preventing the low-priority task from releasing the resource, and the high-priority task ends up waiting forever.
+
+** Does priority inheritance avoid deadlocks?
+Priority inheritance does not prevent deadlocks.
+
+* Task 4
+** The simple task model
+Assumptions:
+ - Tasks that are periodic, and with known times.
+ - A fixed set of tasks
+ - No overhead
+ - Independent tasks
+Most of these fairly realistic, but some require some workaround.
+
+** Utilization test
+For the task set to be schedulable \( U \leq n(2^{\frac{1}{n}} - 1) \) needs to be true.
+Utilization test:
+
+\[ U = \displaystyle\sum_{i = 1}^{n} \frac{C_{i}}{T_{i}} = \frac{5}{20} + \frac{10}{30} +
+\frac{15}{50} = \frac{53}{60} \approx 0.8833\]
+\[ n(2^{\frac{1}{n}} - 1) = 3(2^{\frac{1}{3}}-1) \approx 0.7798 \]
+\[ 0.8833 \nleq 0.7798 \]
+The test fails, so we do not know if the task set is schedulable.
+
+** Response-time analysis
+*** Task c
+\[ w_0 = 5 \]
+\begin{equation}
+\label{eq:c}
+R_c = 5 \leq 20
+\end{equation}
+
+*** Task b
+\[w_0 = 10 \]
+\[w_1 = 10 + \left \lceil \frac{10}{20} \cdot 5 \right \rceil = 15 \]
+\[w_2 = 10 + \left \lceil \frac{15}{20} \cdot 5 \right \rceil = 15 \]
+\begin{equation}
+\label{eq:b}
+R_b = 15 \leq 30
+\end{equation}
+
+*** Task a
+    \[ w_0 = 15 \]
+    \[ w_1 = 15 + \left \lceil \frac{15}{30} \cdot 10 \right \rceil + \left \lceil \frac{15}{20} \cdot 5 \right \rceil = 30 \]
+    \[ w_2 = 15 + \left \lceil \frac{30}{30} \cdot 10 \right \rceil + \left \lceil \frac{30}{20} \cdot 5 \right \rceil = 35 \]
+    \[ w_3 = 15 + \left \lceil \frac{35}{30} \cdot 10 \right \rceil + \left \lceil \frac{35}{20} \cdot 5 \right \rceil = 45 \]
+    \[ w_4 = 15 + \left \lceil \frac{45}{30} \cdot 10 \right \rceil + \left \lceil \frac{45}{20} \cdot 5 \right \rceil = 50 \]
+    \[ w_5 = 15 + \left \lceil \frac{50}{30} \cdot 10 \right \rceil + \left \lceil \frac{50}{20} \cdot 5 \right \rceil = 50 \]
+
+    \begin{equation}
+    \label{eq:a}
+    R_a = 50 \leq 50
+    \end{equation}
+
+From (\ref{eq:c}), (\ref{eq:b}) and (\ref{eq:a}) we can conclude that the task set is schedulable.
+The reason that the results from task 2 and this one are in disagreement is because the utilization test is only sufficient, not necessary. However, the response-time analysis is both sufficient and necessary.
