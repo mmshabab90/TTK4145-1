@@ -1,38 +1,42 @@
-import socket
-from threading import Thread, Lock
+"""Main module"""
 
-import elev
-import master
-import network
-import states
-import constants
+from threading import Thread
+import socket
+import project.elev as elevator
+import project.master as master
+import project.network as network
+import project.states as states
+import project.constants as constants
 
 def main():
+    """
+
+    Checks for other masters and initiates itself accordingly.
+    """
     m_sock = network.socket_setup(39500)
     try:
-        msg, master_addr = m_sock.recvfrom(4096)
+        master_addr = m_sock.recvfrom(4096)[1]
 
-    except (socket.timeout):
+    except socket.timeout:
         state = 'master'
     m_sock.close()
 
-    if (state == 'master'):
-        master = master.Master()
-        master.run()
-        print_thread = Thread(target = master.print_system)
+    if state == 'master':
+        mstr = master.Master()
+        mstr.run()
+        print_thread = Thread(target=mstr.print_system)
         print_thread.setDaemon(True)
         print_thread.start()
-        elev = elev.Elev(constants.ELEV_MODE)
+        elev = elevator.Elev()
         elev.state = 'master'
-        elev.master_addr = master.ip
-        elev.run()
+        elev.master_addr = mstr.ip
+        elev.run(constants.ELEV_MODE)
         states.master()
 
     else:
-        elev = elev.Elev(constants.ELEV_MODE)
+        elev = elevator.Elev()
         elev.master_addr = master_addr[0]
-        elev.run()
-        Running = True
+        elev.run(constants.ELEV_MODE)
         states.slave(elev)
         backup = master.Master()
         elev.backup = backup
