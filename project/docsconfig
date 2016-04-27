@@ -10,7 +10,7 @@ url: https://github.com/sindrehan/TTK41454
 modules: main.py, master.py, elev.py, states.py, network.py
 
 # Write output to the directory "apidocs"
-output: pdf
+output: html
 target: apidocs/
 
 # Include all automatically generated graphs.  These graphs are
