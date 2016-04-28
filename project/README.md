@@ -11,7 +11,6 @@ The system is divided into a series of modules:
 - Network
 - Master
 - Elevator
-- States
 
 ### Driver module
 We use the driver interface provided and interface with it using ctypes.
@@ -49,9 +48,6 @@ To determine which elevator is the fastest/best for external requests the master
 
 ### Elevator module
 When a elevator object is created it does very little. It is not until the run method is called that a connection to the server is made, and movement- and button handlers are started. The reason for this is that the master keeps a list of elevator objects, that mirror the elevator object client side.
-
-### States module
-The state module is a set of functions consisting of while loops that handle the task for an elevator in a certain state.
 
 ## Robustness
 ### Network
