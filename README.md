@@ -1,6 +1,10 @@
 #Project in TTK4145
 ##Note
 Most of the stuff mentioned here, particularly the points mentioned under `Robustness`, is not yet implemented.
+
+##API Documentation
+The documentation can be found [here](https://rawgit.com/sindrehan/TTK4145/master/project/apidocs/index.html).
+
 ##Implementation
 The system is divided into a series of modules:
 - Driver
@@ -8,7 +12,6 @@ The system is divided into a series of modules:
 - Master
 - Elevator
 - States
-
 
 ### Driver module
 We use the driver interface provided and interface with it using ctypes.
