@@ -1,3 +1,5 @@
+"""Master module."""
+
 import socket
 import time
 from threading import Thread, Lock
@@ -7,6 +9,7 @@ import elev
 import network
 
 class Master(object):
+    """Master object"""
     def __init__(self):
         self.alive = True
         self.elevators = {}
@@ -14,20 +17,18 @@ class Master(object):
         self.backup_ip = ''
         self.external_buttons = [False for floor in range(constants.N_FLOORS)]
         self.lock = Lock()
-
-
-    def run(self):
-        self.broadcaster = Thread(target = self.broadcast)
+        self.broadcaster = Thread(target=self.broadcast)
         self.broadcaster.setDaemon(True)
         self.broadcaster.start()
-        self.server = network.ThreadedTCPServer((self.ip,10001), network.ClientHandler)
+        self.server = network.ThreadedTCPServer((self.ip, 10001),
+                                                network.ClientHandler)
         self.server.clients = {}
         self.server.master = self
-        self.server_thread = Thread(target = self.run_server)
+        self.server_thread = Thread(target=self.run_server)
         self.server_thread.setDaemon(True)
         self.server_thread.start()
 
-    def __exit__(self):
+    def close(self):
         self.alive = False
         self.broadcaster.join()
 

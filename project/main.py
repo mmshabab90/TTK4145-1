@@ -2,21 +2,21 @@
 
 from threading import Thread
 import socket
-import project.elev as elevator
-import project.master as master
-import project.network as network
-import project.states as states
-import project.constants as constants
+import elev as elevator
+import master
+import network
+import states
+import constants
 
 def main():
-    """
+    """Run on program start.
 
-    Checks for other masters and initiates itself accordingly.
+    Checks for other masters and initiates itself as either master or slave.
+
     """
     m_sock = network.socket_setup(39500)
     try:
         master_addr = m_sock.recvfrom(4096)[1]
-
     except socket.timeout:
         state = 'master'
     m_sock.close()
