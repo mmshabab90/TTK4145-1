@@ -33,7 +33,7 @@ When a new client connects to the server a `Clienthandler` object is generated. 
 
 The following figure shows the typical situation.
 
-![master-client](/diagrams/master-client.png)
+![master-client](diagrams/master-client.png)
 
 Here each of the node controls an elevator in addition to their other responsebilities. When an internal button is pressed clientside, the client sends the master its new queue. If an external button is pressed the client notifies the master, and the master delegates the task to the most suited elevator as well as noting that the request was external.
 
